@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Classe personnalisée pour l’image de fond du hero */
+.hero-background {
+  background-image: url('../img/bar.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

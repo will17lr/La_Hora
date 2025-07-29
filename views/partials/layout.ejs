@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/favicon-la-hora.ico" type="image/x-icon">
+    <title>La Hora</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body class="bg-black text-white font-sans">
+
+  <!-- Header -->
+  <%- include('partials/header') %>
+
+  <!-- Contenu principal -->
+  <main class="min-h-screen pt-16">
+    <%- body %>
+  </main>
+
+  <!-- Footer -->
+  <%- include('partials/footer') %>
+
+</body>
+</html>

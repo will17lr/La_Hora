@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon-la-hora.ico" type="image/x-icon">
+    <title>La Hora</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/assets/css/style.css" />
+    <style>
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .fade-in {
+        animation: fadeIn 1s ease-out forwards;
+      }
+    </style>
+  </head>
+
+  <body class="bg-black text-white font-sans">
+    <%- include('../partials/header') %>
+
+    <header class="mt-16">
+      <div role="img" aria-label="Photo du bar La Hora en fond" class="hero-background relative h-screen bg-cover bg-center">
+        <div class="absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-center text-center p-4 fade-in">
+          <h1 class="text-4xl sm:text-5xl font-bold mb-4">La Hora</h1>
+          <p class="text-lg sm:text-xl mb-6">Cocktails, ambiance et bonne musique</p>
+          <a href="/views/pages/carte.ejs" class="bg-red-600 hover:bg-red-700 active:scale-95 transition transform duration-200 text-white px-6 py-2 rounded-full">
+            Voir la carte
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="py-16 px-6 md:px-20 bg-gray-900">
+        <div class="max-w-4xl mx-auto text-center">
+          <h2 class="text-3xl font-bold mb-4">Bienvenue à La Hora</h2>
+          <p class="text-lg text-gray-300">Un lieu unique où cocktails raffinés et musique envoûtante se rencontrent. Profitez de notre terrasse et de notre ambiance tamisée en plein cœur de la ville.</p>
+        </div>
+      </section>
+
+      <section class="py-16 bg-black">
+        <div class="max-w-5xl mx-auto px-4">
+          <h2 class="text-3xl text-center font-bold text-red-500 mb-8">Notre Sélection</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div>
+              <h3 class="text-xl font-semibold mb-2">Mojito</h3>
+              <p class="text-gray-400">Rhum, menthe, citron vert</p>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold mb-2">Spritz</h3>
+              <p class="text-gray-400">Aperol, prosecco, soda</p>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold mb-2">Planche Charcuterie</h3>
+              <p class="text-gray-400">Produits locaux et fromage</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <%- include('../partials/footer') %>
+  </body>
+</html>

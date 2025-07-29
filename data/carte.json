@@ -1,0 +1,109 @@
+{
+  "matin": {
+    "petitdejeuner": [
+      {
+        "name": "Croissant",
+        "description": "Croissant pur beurre croustillant",
+        "price": 1.50,
+        "image": "/assets/img/petit-dejeuner.jpg"
+      },
+      {
+        "name": "Pain au chocolat",
+        "description": "Pâte feuilletée au chocolat",
+        "price": 1.80,
+        "image": "/assets/img/petit-dejeuner.jpg"
+      }
+    ],
+    "chaudes": [
+      {
+        "name": "Café",
+        "description": "Expresso, allongé ou noisette",
+        "price": 1.20,
+        "image": "/assets/img/petit-dejeuner.jpg"
+      },
+      {
+        "name": "Thé",
+        "description": "Thé noir, vert, ou infusion",
+        "price": 2.00,
+        "image": "/assets/img/petit-dejeuner.jpg"
+      }
+    ],
+    "sirops": [
+      {
+        "name": "Sirop à l’eau",
+        "description": "Menthe, grenadine ou citron",
+        "price": 1.00,
+        "image": "/assets/img/mojito.jpg"
+      }
+    ],
+    "softs": [
+      {
+        "name": "Jus d’orange",
+        "description": "Pur jus pressé",
+        "price": 2.50,
+        "image": "/assets/img/mojito.jpg"
+      }
+    ],
+    "bieres": [
+      {
+        "name": "Heineken",
+        "description": "Bière blonde 25cl",
+        "price": 3.00,
+        "image": "/assets/img/mojito.jpg"
+      }
+    ]
+  },
+
+  "soir": {
+    "softs": [
+      {
+        "name": "Coca-Cola",
+        "description": "Classique ou zéro",
+        "price": 2.50,
+        "image": "/assets/img/mojito.jpg"
+      },
+      {
+        "name": "Perrier",
+        "description": "Eau gazeuse citronnée",
+        "price": 2.30,
+        "image": "/assets/img/mojito.jpg"
+      }
+    ],
+    "cocktails": [
+      {
+        "name": "Mojito",
+        "description": "Rhum, menthe, sucre, citron vert",
+        "price": 7.50,
+        "image": "/assets/img/mojito.jpg"
+      },
+      {
+        "name": "Spritz",
+        "description": "Aperol, prosecco, soda",
+        "price": 7.00,
+        "image": "/assets/img/spritz.jpg"
+      }
+    ],
+    "aperitifs": [
+      {
+        "name": "Ricard",
+        "description": "Pastis 2cl",
+        "price": 2.20,
+        "image": "/assets/img/mojito.webp"
+      }
+    ],
+    "planches": [
+      {
+        "name": "Planche charcuterie",
+        "description": "Jambon cru, saucisson, pâté",
+        "price": 9.90,
+        "image": "/assets/img/planche-charcuterie.jpg"
+      },
+      {
+        "name": "Planche mixte",
+        "description": "Charcuterie & fromages locaux",
+        "price": 12.00,
+        "image": "/assets/img/planche-mixte.jpg"
+      }
+    ]
+  }
+}

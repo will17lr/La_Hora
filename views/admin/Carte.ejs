@@ -1,70 +1,35 @@
-<!DOCTYPE html>
-<html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Notre Carte – La Hora</title>
-    <link rel="icon" href="/favicon-la-hora.ico" type="image/x-icon" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/assets/css/style.css" />
-  </head>
+<%- title = "Admin - Carte – La Hora" %>
 
-  <body class="bg-black text-white font-sans">
+ <main class="pt-24 px-6 md:px-20 pb-10">
+    <h1 class="text-3xl font-bold text-red-500 mb-8 text-center">Carte – Admin</h1>
 
-  <!-- views/admin/carte.ejs -->
-<%- include('../partials/header') %>
+    <% Object.keys(carte).forEach(moment => { %>
+      <section class="mb-10">
+        <h2 class="text-2xl font-bold text-yellow-400 mb-4 capitalize"><%= moment %></h2>
 
-<main class="min-h-screen bg-black text-white px-6 py-10">
-  <div class="max-w-5xl mx-auto">
-    <h1 class="text-3xl font-bold text-center text-red-500 mb-10">Administration de la carte</h1>
+        <% Object.keys(carte[moment]).forEach(category => { %>
+          <div class="mb-6">
+            <h3 class="text-xl text-red-400 font-semibold border-b border-gray-700 pb-1 capitalize"><%= category %></h3>
 
-    <form action="/admin/carte/add" method="POST" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-10">
-      <select name="category" required class="text-black px-4 py-2 rounded">
-        <% ['cocktails', 'mocktails', 'aperitifs', 'softs', 'bieres', 'vins', 'planches'].forEach(cat => { %>
-          <option value="<%= cat %>"><%= cat %></option>
+            <% if (Array.isArray(carte[moment][category])) { %>
+              <ul class="mt-2 space-y-4">
+                <% carte[moment][category].forEach(item => { %>
+                  <li class="bg-gray-800 p-4 rounded-md flex flex-col md:flex-row md:justify-between">
+                    <div>
+                      <p class="font-bold"><%= item.name %></p>
+                      <p class="text-sm text-gray-400"><%= item.description %></p>
+                    </div>
+                    <div class="text-sm text-right mt-2 md:mt-0">
+                      <p class="text-green-400 font-semibold"><%= item.price.toFixed(2) %> €</p>
+                    </div>
+                  </li>
+                <% }) %>
+              </ul>
+            <% } else { %>
+              <p class="text-gray-500 text-sm italic">Aucun produit.</p>
+            <% } %>
+          </div>
         <% }) %>
-      </select>
-      <input type="text" name="nom" placeholder="Nom du produit" required class="px-4 py-2 text-black rounded">
-      <input type="text" name="description" placeholder="Description" class="px-4 py-2 text-black rounded">
-      <input type="number" step="0.01" name="prix" placeholder="Prix €" required class="px-4 py-2 text-black rounded">
-      <button type="submit" class="col-span-full bg-green-600 hover:bg-green-700 py-2 mt-2 rounded">Ajouter</button>
-    </form>
-
-    <% for (const category in carte) { %>
-      <section class="mb-12">
-        <h2 class="text-2xl font-semibold capitalize mb-4 border-b border-gray-600 pb-1"><%= category %></h2>
-        <ul class="space-y-4">
-          <% carte[category].forEach((item, index) => { %>
-            <li class="bg-gray-800 p-4 rounded flex flex-col md:flex-row md:items-center justify-between">
-              <div class="mb-2 md:mb-0">
-                <strong><%= item.nom %></strong> - <%= item.description %>
-(<%= item.prix ? item.prix.toFixed(2) : "?" %> €)
-
-              </div>
-              <div class="flex gap-2">
-                <form action="/admin/carte/delete" method="POST">
-                  <input type="hidden" name="category" value="<%= category %>">
-                  <input type="hidden" name="index" value="<%= index %>">
-                  <button type="submit" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded">Supprimer</button>
-                </form>
-                <form action="/admin/carte/update" method="POST" class="flex gap-2">
-                  <input type="hidden" name="category" value="<%= category %>">
-                  <input type="hidden" name="index" value="<%= index %>">
-                  <input type="text" name="nom" value="<%= item.nom %>" class="px-2 py-1 text-black rounded">
-                  <input type="text" name="description" value="<%= item.description %>" class="px-2 py-1 text-black rounded">
-                  <input type="number" step="0.01" name="prix" value="<%= item.prix %>" class="px-2 py-1 text-black rounded">
-                  <button type="submit" class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded">Modifier</button>
-                </form>
-              </div>
-            </li>
-          <% }) %>
-        </ul>
       </section>
-    <% } %>
-  </div>
-</main>
-
-<%- include('../partials/footer') %>
-
-  </body>
-</html>
+    <% }) %>
+  </main>

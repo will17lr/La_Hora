@@ -1,0 +1,51 @@
+<% title = "Carte – La Hora" %>
+
+<main class="pt-24 pb-16 px-4 md:px-20">
+  <div class="max-w-5xl mx-auto text-center fade-in">
+    <h1 class="text-4xl font-bold text-or mb-6 font-cinzel uppercase">Choisissez votre moment</h1>
+    <p class="text-creme mb-10 text-lg">
+      Selon le moment de la journée, découvrez notre carte <strong>matin</strong> ou <strong>soir</strong>.
+    </p>
+  </div>
+
+  <!-- Choix visuel -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-12 fade-in">
+    <a href="/carte?moment=matin" class="relative group overflow-hidden rounded-lg shadow-lg">
+      <img src="/assets/img/matin.jpg" alt="Carte du matin"
+           class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105" />
+      <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-xl font-semibold">
+        ☕ Voir la carte du matin
+      </div>
+    </a>
+
+    <a href="/carte?moment=soir" class="relative group overflow-hidden rounded-lg shadow-lg">
+      <img src="/assets/img/soir.jpg" alt="Carte du soir"
+           class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105" />
+      <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-xl font-semibold">
+        🍸 Voir la carte du soir
+      </div>
+    </a>
+  </div>
+
+  <!-- Boutons -->
+  <div class="text-center space-y-4 fade-in">
+    <a href="/carte" class="inline-block bg-rouge hover:bg-rougefonce text-white px-6 py-2 rounded-full transition">
+      🔁 Voir automatiquement la carte du moment
+    </a>
+    <br />
+    <a href="/carte-selection" class="text-or hover:underline">
+      🕐 Choisir manuellement un autre moment
+    </a>
+  </div>
+</main>
+
+<!-- JS Animation fade-in -->
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('appear');
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>

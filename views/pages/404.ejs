@@ -1,20 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <link rel="icon" href="/favicon-la-hora.ico" type="image/x-icon">
-  <title>Evenement La Hora</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="/assets/css/style.css" />
-</head>
-<body>
-  <%- include('../partials/header') %>
+<% title = "404 – La Hora" %>
 
-  <section class="min-h-screen flex flex-col items-center justify-center text-center text-white bg-black px-4">
-  <h1 class="text-5xl font-bold mb-4">404</h1>
+<section class="min-h-screen flex flex-col items-center justify-center text-center px-4">
+  <h1 class="text-6xl font-bold text-red-500 mb-4">404</h1>
   <p class="text-xl mb-6">Page non trouvée.</p>
-  <a href="/" class="text-red-500 underline hover:text-red-700">Retour à l’accueil</a>
-  </section>
-
-  <%- include('../partials/footer') %>
-</body>
-</html>
+  <a href="/" class="text-white underline hover:text-red-400 transition">Retour à l’accueil</a>
+</section>

@@ -3,19 +3,32 @@ const fs = require('fs');
 const path = require('path');
 const router = express.Router();
 
-// GET formulaire
+const filePath = path.join(__dirname, '../../data/reservations.json');
+
+// Affichage du formulaire
 router.get('/', (req, res) => {
   res.render('pages/reservation', { title: 'Réservation – La Hora' });
 });
 
-// POST : enregistrement + redirection
+// Traitement du formulaire
 router.post('/', (req, res) => {
+  const { firstname, lastname, email, phone, date, time, people, message } = req.body;
+
+  if (!firstname || !lastname || !email || !date || !time || !people) {
+    return res.status(400).send("Champs requis manquants.");
+  }
+
   const newReservation = {
     id: Date.now(),
-    ...req.body,
+    firstname,
+    lastname,
+    email,
+    phone,
+    date,
+    time,
+    people,
+    message: message || '',
   };
-
-  const filePath = path.join(__dirname, '../../data/reservations.json');
 
   fs.readFile(filePath, 'utf-8', (err, data) => {
     const reservations = err ? [] : JSON.parse(data);
@@ -23,9 +36,11 @@ router.post('/', (req, res) => {
 
     fs.writeFile(filePath, JSON.stringify(reservations, null, 2), (err) => {
       if (err) {
-        console.error('Erreur d’enregistrement :', err);
-        return res.status(500).send('Erreur serveur');
+        console.error('❌ Erreur lors de l’enregistrement :', err);
+        return res.status(500).send('Erreur serveur.');
       }
+
+      console.log("✅ Réservation enregistrée :", newReservation);
       res.redirect('/reservation/confirmation');
     });
   });

@@ -1,13 +1,17 @@
+require('dotenv').config();
 const express = require('express');
+const router = express.Router();
 const fs = require('fs');
 const path = require('path');
+const filePath = path.join(__dirname, '../../../data/messages.json');
 const nodemailer = require('nodemailer');
-const router = express.Router();
 
-const filePath = path.join(__dirname, '../../../data/reservations.json');
 
-router.get('/contact', (req, res) => {
-  res.render('pages/contact', { title: 'Contact – La Hora' });
+router.get('/', (req, res) => {
+  res.render('pages/contact', {
+    title: 'Contact – La Hora',
+    success: req.query.success === '1'
+  });
 });
 
 router.post('/contact', async (req, res) => {
@@ -15,30 +19,29 @@ router.post('/contact', async (req, res) => {
   const newMessage = { name, email, subject, message, date: new Date().toISOString() };
 
   try {
-    // 1. Envoyer l'email
     const transporter = nodemailer.createTransport({
-      service: 'gmail', // ou 'outlook', 'smtp.orange.fr', etc.
+      service: 'gmail',
       auth: {
-        user: 'votreemail@gmail.com',
-        pass: 'votre_mot_de_passe_app'
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
       }
     });
 
-    const mailOptions = {
+    await transporter.sendMail({
       from: `"${name}" <${email}>`,
-      to: 'contact@lahora.fr', // destination réelle
+      to: 'contact@lahora.fr',
       subject,
       text: message
-    };
+    });
 
-    await transporter.sendMail(mailOptions);
+    const existingData = fs.existsSync(filePath)
+      ? JSON.parse(fs.readFileSync(filePath))
+      : [];
 
-    // 2. Enregistrement dans reservations.json
-    const existingData = fs.existsSync(filePath) ? JSON.parse(fs.readFileSync(filePath)) : [];
     existingData.push(newMessage);
     fs.writeFileSync(filePath, JSON.stringify(existingData, null, 2));
 
-    res.redirect('/contact');
+    res.redirect('/contact?success=1');
   } catch (err) {
     console.error("Erreur contact :", err.message);
     res.status(500).send("Une erreur est survenue lors de l'envoi du message.");

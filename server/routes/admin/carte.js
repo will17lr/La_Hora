@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require('fs');
 const path = require('path');
 
-const dataPath = path.join(__dirname, '../../data/carte.json');
+const dataPath = path.join(__dirname, '../../../data/carte.json');
 
 // GET - Afficher l'interface
 router.get('/', (req, res) => {

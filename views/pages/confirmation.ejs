@@ -1,32 +1,22 @@
-<!DOCTYPE html>
-<html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/public/favicon-la-hora.ico" type="image/x-icon">
-    <title>Confirmation – La Hora</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/public/assets/css/style.css" />
-  </head>
+<% title = "Confirmation – La Hora" %>
 
-  <body class="bg-black text-white font-sans">
-    <%- include('../partials/header') %>
+<div class="max-w-xl mx-auto text-center bg-gray-900 bg-opacity-80 p-8 rounded-lg shadow-lg fade-in">
+  <h1 class="text-3xl font-bold text-green-500 mb-6">Réservation confirmée !</h1>
+  <p class="text-lg text-gray-300 mb-4">
+    Merci pour votre réservation. Nous avons bien reçu votre demande.
+  </p>
+  <p class="text-sm text-gray-500 mb-8">
+    Vous recevrez une confirmation par e-mail si vous avez renseigné une adresse valide.
+  </p>
+  <a href="/" class="inline-block bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full transition duration-200">
+    Retour à l'accueil
+  </a>
+</div>
 
-    <main class="pt-24 pb-16 px-6 md:px-20">
-      <div class="max-w-xl mx-auto text-center bg-gray-900 bg-opacity-80 p-8 rounded-lg shadow-lg">
-        <h1 class="text-3xl font-bold text-green-500 mb-6">Réservation confirmée !</h1>
-        <p class="text-lg text-gray-300 mb-4">
-          Merci pour votre réservation. Nous avons bien reçu votre demande.
-        </p>
-        <p class="text-sm text-gray-500 mb-8">
-          Vous recevrez une confirmation par e-mail si vous avez renseigné une adresse valide.
-        </p>
-        <a href="/" class="inline-block bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full transition duration-200">
-          Retour à l'accueil
-        </a>
-      </div>
-    </main>
-
-    <%- include('../partials/footer') %>
-  </body>
-</html>
+<script>
+  // Animation fade-in douce
+  document.addEventListener('DOMContentLoaded', () => {
+    const block = document.querySelector('.fade-in');
+    block?.classList.add('opacity-100', 'translate-y-0');
+  });
+</script>

@@ -2,17 +2,22 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+const expressLayouts = require('express-ejs-layouts');
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-// app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('public'));
 
 
 // View engine
-app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+app.use(expressLayouts); // <-- obligatoire
+app.locals.title = 'La Hora'; // <-- titre par défaut
+app.set('layout', 'partials/layout'); // <-- chemin par défaut du layout.ejs
 
 
 // ✅ Vérifie bien que tous ces fichiers existent et exportent un router :
@@ -31,9 +36,9 @@ app.get('/debug-header', (req, res) => {
 });
 
 // Routes use (toujours des objets de type router ici)
-app.use('/', indexRoutes);
+app.use('/', require('./server/routes/pages/index'));
 app.use('/reservation', reservationRoutes);
-app.use('/carte', carteRoutes);
+app.use('/', carteRoutes);
 app.use('/about', aboutRoutes);
 app.use('/contact', contactRoutes);
 app.use('/event', eventRoutes);

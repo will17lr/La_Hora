@@ -96,7 +96,7 @@
         "name": "Planche charcuterie",
         "description": "Jambon cru, saucisson, pâté",
         "price": 9.90,
-        "image": "/assets/img/planche-charcuterie.jpg"
+        "image": "/assets/img/planche-charcuterie.webp"
       },
       {
         "name": "Planche mixte",

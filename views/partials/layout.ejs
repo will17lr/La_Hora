@@ -4,22 +4,31 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" href="/favicon-la-hora.ico" type="image/x-icon">
-    <title>La Hora</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/assets/css/style.css" />
+  <title><%= title || 'La Hora' %></title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Didact+Gothic&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/output.css" />
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in {
+      animation: fadeIn 1s ease-out forwards;
+    }
+  </style>
 </head>
-<body class="bg-black text-white font-sans">
+<%
+  const currentMoment = typeof moment !== 'undefined' ? moment : 'soir';
+%>
+<body class="<%= currentMoment === 'matin' ? 'bg-clairfond text-clairtexte' : 'bg-sombrefond text-sombretexte' %> font-didact">
 
-  <!-- Header -->
-  <%- include('partials/header') %>
+  <%- include('header') %>
 
-  <!-- Contenu principal -->
-  <main class="min-h-screen pt-16">
+  <main class="pt-28 pb-16 px-6 md:px-20 min-h-screen">
     <%- body %>
   </main>
 
-  <!-- Footer -->
-  <%- include('partials/footer') %>
+  <%- include('footer') %>
 
 </body>
 </html>

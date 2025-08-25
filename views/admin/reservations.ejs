@@ -1,0 +1,46 @@
+    <%- title = "Admin - Réservations – La Hora" %>
+
+    <main class="pt-24 px-6 md:px-20 pb-10">
+      <h1 class="text-3xl font-bold text-red-500 mb-8 text-center">Réservations reçues</h1>
+
+      <% if (reservations.length === 0) { %>
+        <p class="text-center text-gray-400">Aucune réservation pour le moment.</p>
+      <% } else { %>
+        <div class="overflow-x-auto">
+          <table class="w-full border border-gray-700 text-sm">
+            <thead class="bg-gray-800 text-left">
+              <tr>
+                <th class="p-2 border border-gray-700">Nom</th>
+                <th class="p-2 border border-gray-700">Prénom</th>
+                <th class="p-2 border border-gray-700">Téléphone</th>
+                <th class="p-2 border border-gray-700">Email</th>
+                <th class="p-2 border border-gray-700">Date</th>
+                <th class="p-2 border border-gray-700">Heure</th>
+                <th class="p-2 border border-gray-700">Personnes</th>
+                <th class="p-2 border border-gray-700">Message</th>
+                <th class="p-2 border border-gray-700">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% reservations.forEach(r => { %>
+                <tr class="bg-gray-900 hover:bg-gray-800 transition">
+                  <td class="p-2 border border-gray-800"><%= r.lastname %></td>
+                  <td class="p-2 border border-gray-800"><%= r.firstname %></td>
+                  <td class="p-2 border border-gray-800"><%= r.phone %></td>
+                  <td class="p-2 border border-gray-800"><%= r.email %></td>
+                  <td class="p-2 border border-gray-800"><%= r.date %></td>
+                  <td class="p-2 border border-gray-800"><%= r.time %></td>
+                  <td class="p-2 border border-gray-800"><%= r.people || r.personnes %></td>
+                  <td class="p-2 border border-gray-800"><%= r.message || '-' %></td>
+                  <td class="p-2 border border-gray-800 text-center">
+                    <form action="/admin/delete/<%= r.id %>" method="POST" onsubmit="return confirm('Supprimer cette réservation ?')">
+                      <button type="submit" class="text-red-400 hover:text-red-600 font-bold">🗑</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } %>
+    </main>

@@ -1,0 +1,36 @@
+{
+  "name": "la-hora",
+  "version": "1.0.0",
+  "description": "Site web du bar La Hora (Cocktails & Tapas – La Rochelle)",
+  "main": "app.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "concurrently \"nodemon app.js\" \"tailwindcss -i ./public/assets/css/style.css -o ./public/assets/css/output.css --watch\"",
+    "build:css": "tailwindcss -i ./public/assets/css/style.css -o ./public/assets/css/output.css",
+    "start": "node app.js"
+  },
+  "keywords": [
+    "bar",
+    "cocktails",
+    "la-rochelle",
+    "express",
+    "tailwindcss",
+    "ejs"
+  ],
+  "author": "Ton Nom",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-ejs-layouts": "^2.5.1",
+    "nodemailer": "^7.0.5"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.10",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.3"
+  }
+}

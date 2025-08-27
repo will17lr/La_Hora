@@ -1,5 +1,33 @@
 <% title = "Carte – La Hora" %>
 
+<%
+  // ✅ Prix formaté "fr-FR"
+  const formatPrice = (p) => {
+    const n = Number(p);
+    return Number.isFinite(n)
+      ? new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n) + ' €'
+      : p;
+  };
+
+  // ✅ Libellés lisibles pour les catégories
+  const LABELS = {
+    petitdejeuner: 'Petit-Déjeuner',
+    chaudes: 'Boissons Chaudes',
+    sirops: 'Sirops',
+    softs: 'Softs',
+    bieres: 'Bières',
+    cocktails: 'Cocktails',
+    alcool: 'Alcools',
+    tapas: 'Tapas'
+  };
+
+  // Fallback si la clé n’est pas dans LABELS: "ma_categorie-test" -> "Ma categorie test"
+  const labelize = (key) =>
+    LABELS[key] ||
+    key.replace(/[_-]+/g, ' ')
+       .replace(/\w\S*/g, s => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase());
+%>
+
 <main class="pt-24 pb-16 px-4 sm:px-8 md:px-20">
   <div class="max-w-5xl mx-auto">
     <h1 class="text-4xl font-bold text-red-500 mb-10 text-center fade-in">
@@ -9,9 +37,10 @@
     <% Object.entries(carte).forEach(([category, items]) => { %>
       <% if (items && items.length) { %>
         <section class="mb-12 fade-in">
-          <h2 class="text-2xl font-semibold mb-4 capitalize border-b border-gray-700 pb-1 text-red-400">
-            <%= category %>
+          <h2 class="text-2xl font-semibold mb-4 border-b border-gray-700 pb-1 text-red-400">
+            <%= labelize(category) %>
           </h2>
+
           <ul class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <% items.forEach(item => { %>
               <li class="flex items-start bg-gray-900 bg-opacity-80 p-4 rounded-lg shadow">
@@ -21,7 +50,9 @@
                 <div>
                   <p class="text-lg font-medium text-white mb-1">
                     <%= item.name %>
-                    <span class="text-sm text-gray-400"> – <%= item.price %></span>
+                    <% if (item.price !== undefined && item.price !== null && item.price !== '') { %>
+                      <span class="text-sm text-gray-400"> – <%= formatPrice(item.price) %></span>
+                    <% } %>
                   </p>
                   <% if (item.description) { %>
                     <p class="text-sm text-gray-400"><%= item.description %></p>
@@ -35,25 +66,21 @@
     <% }) %>
 
     <div class="text-center mt-12 space-y-4 fade-in">
-      <a href="/carte-selection" class="inline-block text-red-400 hover:underline">
-        🔄 Revenir au choix matin/soir
-      </a>
-      <br />
       <a href="/carte?moment=<%= moment === 'matin' ? 'soir' : 'matin' %>" 
          class="inline-block bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-full transition duration-200">
         🔁 Voir la carte du <%= moment === 'matin' ? 'soir' : 'matin' %>
       </a>
+      <!-- <br />
+      <a href="/carte-selection" class="inline-block text-red-400 hover:underline">
+        🕐 Choisir manuellement un autre moment
+      </a> -->
     </div>
   </div>
 </main>
 
-<!-- Animation JS -->
 <script>
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) entry.target.classList.add('appear');
-    });
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('appear'); });
   }, { threshold: 0.1 });
-
   document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 </script>

@@ -7,7 +7,14 @@
   "scripts": {
     "dev": "concurrently \"nodemon app.js\" \"tailwindcss -i ./public/assets/css/style.css -o ./public/assets/css/output.css --watch\"",
     "build:css": "tailwindcss -i ./public/assets/css/style.css -o ./public/assets/css/output.css",
-    "start": "node app.js"
+    "build:css:prod": "tailwindcss -i ./public/assets/css/style.css -o ./public/assets/css/output.css --minify",
+    "start": "node app.js",
+    "start:prod": "npm run build:css:prod && node app.js",
+    "migrate:menu": "node scripts/migrate-menuitems.js",
+    "reindex:menu": "node scripts/reindex-menuitems.js",
+    "dedupe:menu": "node scripts/dedupe-menuitems.js",
+    "sync-indexes": "node scripts/sync-indexes.js",
+    "export:menu": "node scripts/export-menu.js"
   },
   "keywords": [
     "bar",
@@ -17,13 +24,16 @@
     "tailwindcss",
     "ejs"
   ],
-  "author": "Ton Nom",
+  "author": "Will",
   "license": "MIT",
   "dependencies": {
+    "compression": "^1.8.1",
     "dotenv": "^17.2.1",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "express-ejs-layouts": "^2.5.1",
+    "helmet": "^8.1.0",
+    "mongoose": "^8.18.0",
     "nodemailer": "^7.0.5"
   },
   "devDependencies": {
@@ -32,5 +42,16 @@
     "nodemon": "^3.1.10",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.3"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "app.js",
+      "server"
+    ],
+    "ext": "js,json",
+    "ignore": [
+      "public/assets/css/output.css",
+      "node_modules"
+    ]
   }
 }

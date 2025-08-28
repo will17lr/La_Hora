@@ -47,10 +47,6 @@ app.set('view engine', 'ejs');
 app.use(expressLayouts);
 app.locals.title = 'La Hora';
 app.set('layout', 'partials/layout');
-// Faire remonter <style> et <script> des vues vers le layout
-app.set('layout extractStyles', true);
-app.set('layout extractScripts', true);
-app.set('layout extractMeta', true);
 
 // === Routes (import) ===
 const indexRoutes = require('./server/routes/pages/index');

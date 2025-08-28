@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose');
 require('dotenv').config();
-const MenuItem = require('../server/models/MenuItem');
+const MenuItem = require('../server/models/menu.model');
 
 (async () => {
   try {

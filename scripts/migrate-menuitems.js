@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
-const MenuItem = require('../server/models/MenuItem');
+const MenuItem = require('../server/models/menu.model');
 
 (async () => {
   try {

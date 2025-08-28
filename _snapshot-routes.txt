@@ -1,0 +1,29 @@
+
+    Directory: C:\Users\wvogl\La Hora\server\routes
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----          27/08/2025    18:32                admin
+d----          27/08/2025    18:32                pages
+
+    Directory: C:\Users\wvogl\La Hora\server\routes\admin
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---          30/07/2025    17:48           1085 carte.js
+-a---          26/08/2025    13:46              0 login.js
+-a---          30/07/2025    17:48           1464 reservations.js
+
+    Directory: C:\Users\wvogl\La Hora\server\routes\pages
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---          30/07/2025    16:20            205 about.js
+-a---          26/08/2025    14:34            328 carte-selection.js
+-a---          27/08/2025    14:24           1605 carte.js
+-a---          26/08/2025    14:46            352 carteSelection.js
+-a---          30/07/2025    17:14           1430 contact.js
+-a---          26/07/2025    15:26            201 event.js
+-a---          26/07/2025    15:25            191 index.js
+-a---          27/08/2025    14:23           2316 reservation.js
+

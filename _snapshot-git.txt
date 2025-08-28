@@ -1,0 +1,20 @@
+On branch refonte-aout2
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   public/assets/img/staff2.jpg
+	deleted:    public/assets/img/staff3.jpg
+	modified:   views/pages/about.ejs
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	_snapshot-arbo.txt
+	_snapshot-git.txt
+	public/assets/img/expressoMartini.jpg
+	public/assets/img/mojitoFraise.jpg
+	public/assets/img/sexonthebeach.jpg
+	public/assets/img/staff20.jpg
+
+no changes added to commit (use "git add" and/or "git commit -a")
+origin	https://github.com/will17lr/La_Hora.git (fetch)
+origin	https://github.com/will17lr/La_Hora.git (push)

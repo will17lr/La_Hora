@@ -14,8 +14,7 @@
     "reindex:menu": "node scripts/reindex-menuitems.js",
     "dedupe:menu": "node scripts/dedupe-menuitems.js",
     "sync-indexes": "node scripts/sync-indexes.js",
-    "export:menu": "node scripts/export-menu.js",
-    "seed:menu": "node scripts/seed-menuitems.js"
+    "export:menu": "node scripts/export-menu.js"
   },
   "keywords": [
     "bar",

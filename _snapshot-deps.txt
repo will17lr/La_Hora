@@ -1,0 +1,15 @@
+la-hora@1.0.0 C:\Users\wvogl\La Hora
+Ôö£ÔöÇÔöÇ autoprefixer@10.4.21
+Ôö£ÔöÇÔöÇ compression@1.8.1
+Ôö£ÔöÇÔöÇ concurrently@8.2.2
+Ôö£ÔöÇÔöÇ dotenv@17.2.1
+Ôö£ÔöÇÔöÇ ejs@3.1.10
+Ôö£ÔöÇÔöÇ express-ejs-layouts@2.5.1
+Ôö£ÔöÇÔöÇ express@5.1.0
+Ôö£ÔöÇÔöÇ helmet@8.1.0
+Ôö£ÔöÇÔöÇ mongoose@8.18.0
+Ôö£ÔöÇÔöÇ nodemailer@7.0.5
+Ôö£ÔöÇÔöÇ nodemon@3.1.10
+Ôö£ÔöÇÔöÇ postcss@8.5.6
+ÔööÔöÇÔöÇ tailwindcss@3.4.3
+

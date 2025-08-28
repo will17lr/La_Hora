@@ -1,0 +1,40 @@
+
+    Directory: C:\Users\wvogl\La Hora\views
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----          27/08/2025    18:32                admin
+d----          27/08/2025    18:32                pages
+d----          27/08/2025    18:32                partials
+
+    Directory: C:\Users\wvogl\La Hora\views\admin
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---          30/07/2025    18:08           1518 Carte.ejs
+-a---          26/08/2025    13:46              0 login.ejs
+-a---          30/07/2025    18:00           2485 reservations.ejs
+
+    Directory: C:\Users\wvogl\La Hora\views\pages
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---          30/07/2025    13:09            349 404.ejs
+-a---          27/08/2025    15:08            344 500.ejs
+-a---          27/08/2025    19:02           3236 about.ejs
+-a---          26/08/2025    21:04           2150 carte-selection.ejs
+-a---          27/08/2025    07:47           3303 carte.ejs
+-a---          27/08/2025    11:29           1748 confirmation.ejs
+-a---          30/07/2025    13:11           2304 contact.ejs
+-a---          30/07/2025    13:11            367 event.ejs
+-a---          26/08/2025    21:00           1984 index.ejs
+-a---          30/07/2025    15:33           2698 reservation.ejs
+
+    Directory: C:\Users\wvogl\La Hora\views\partials
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---          31/07/2025    13:08            506 footer.ejs
+-a---          26/08/2025    21:03           4124 header.ejs
+-a---          01/08/2025    11:01           1098 layout.ejs
+

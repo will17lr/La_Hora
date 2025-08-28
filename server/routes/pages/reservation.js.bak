@@ -71,4 +71,3 @@ router.get('/confirmation', async (req, res, next) => {
 });
 
 module.exports = router;
-

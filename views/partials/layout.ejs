@@ -2,33 +2,54 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" href="/favicon-la-hora.ico" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <title><%= title || 'La Hora' %></title>
+  <meta name="description" content="La Hora — Bar à cocktails & tapas à La Rochelle. Carte matin et soir, ambiance conviviale." />
+  <meta name="theme-color" content="#1E1E1E" />
+
+  <!-- Open Graph / partage -->
+  <meta property="og:title" content="<%= title || 'La Hora' %>">
+  <meta property="og:description" content="Bar à cocktails & tapas à La Rochelle.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/assets/img/og-cover.jpg">
+
+  <link rel="icon" href="/favicon-la-hora.ico" type="image/x-icon">
+
+  <!-- Google Fonts (display=swap pour éviter le FOIT) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Didact+Gothic&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/output.css" />
-  <style>
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .fade-in {
-      animation: fadeIn 1s ease-out forwards;
-    }
-  </style>
+
+  <!-- CSS généré par Tailwind + ton complément -->
+  <link rel="stylesheet" href="/assets/css/output.css">
+  <link rel="stylesheet" href="/assets/css/extra.css"><!-- animations utilitaires, etc. -->
+
+  <!-- Emplacement optionnel si une vue veut pousser du style (express-ejs-layouts) -->
+  <%- style %>
 </head>
+
 <%
-  const currentMoment = typeof moment !== 'undefined' ? moment : 'soir';
+  // On attend que les routes passent toujours moment = 'matin' | 'soir'
+  const currentMoment = (typeof moment !== 'undefined') ? moment : 'soir';
+  const themeClass = currentMoment === 'matin'
+    ? 'bg-clairfond text-clairtexte'
+    : 'bg-sombrefond text-sombretexte';
 %>
-<body class="<%= currentMoment === 'matin' ? 'bg-clairfond text-clairtexte' : 'bg-sombrefond text-sombretexte' %> font-didact">
 
-  <%- include('header') %>
+<body class="<%= themeClass %> font-didact min-h-screen flex flex-col">
+  <%- include('./header') %>
 
-  <main class="pt-28 pb-16 px-6 md:px-20 min-h-screen">
+  <main class="grow pt-28 pb-16 px-6 md:px-20">
     <%- body %>
   </main>
 
-  <%- include('footer') %>
+  <%- include('./footer') %>
 
+  <!-- JS globaux (tjrs en defer) -->
+  <script src="/assets/js/fade-in.js" defer></script>
+
+  <!-- Emplacement optionnel si une vue veut pousser du script (express-ejs-layouts) -->
+  <%- script %>
 </body>
 </html>

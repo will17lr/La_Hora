@@ -1,0 +1,23 @@
+/* Animations utilitaires (complément à Tailwind) */
+
+/* Effet fade-in pour les sections */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 1s ease-out forwards;
+}
+
+/* Variante "appear" activée par IntersectionObserver */
+.appear {
+  opacity: 1;
+}

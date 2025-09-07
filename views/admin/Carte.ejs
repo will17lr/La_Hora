@@ -1,0 +1,35 @@
+<%- title = "Admin - Carte – La Hora" %>
+
+ <main class="pt-24 px-6 md:px-20 pb-10">
+    <h1 class="text-3xl font-bold text-red-500 mb-8 text-center">Carte – Admin</h1>
+
+    <% Object.keys(carte).forEach(moment => { %>
+      <section class="mb-10">
+        <h2 class="text-2xl font-bold text-yellow-400 mb-4 capitalize"><%= moment %></h2>
+
+        <% Object.keys(carte[moment]).forEach(category => { %>
+          <div class="mb-6">
+            <h3 class="text-xl text-red-400 font-semibold border-b border-gray-700 pb-1 capitalize"><%= category %></h3>
+
+            <% if (Array.isArray(carte[moment][category])) { %>
+              <ul class="mt-2 space-y-4">
+                <% carte[moment][category].forEach(item => { %>
+                  <li class="bg-gray-800 p-4 rounded-md flex flex-col md:flex-row md:justify-between">
+                    <div>
+                      <p class="font-bold"><%= item.name %></p>
+                      <p class="text-sm text-gray-400"><%= item.description %></p>
+                    </div>
+                    <div class="text-sm text-right mt-2 md:mt-0">
+                      <p class="text-green-400 font-semibold"><%= item.price.toFixed(2) %> €</p>
+                    </div>
+                  </li>
+                <% }) %>
+              </ul>
+            <% } else { %>
+              <p class="text-gray-500 text-sm italic">Aucun produit.</p>
+            <% } %>
+          </div>
+        <% }) %>
+      </section>
+    <% }) %>
+  </main>

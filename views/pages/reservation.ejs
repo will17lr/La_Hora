@@ -1,0 +1,272 @@
+<% title = "Réservation – La Hora" %>
+<%
+  // ✅ Toujours défini, même si le contrôleur n’envoie pas 'form'
+  const F = (typeof form === 'object' && form) ? form : {};
+%>
+
+<main class="pt-24 pb-16 px-6 md:px-20">
+  <div class="max-w-3xl mx-auto bg-gray-900 bg-opacity-90 p-8 rounded-2xl shadow-lg animate-fadeIn">
+    <h1 class="text-4xl font-bold text-center text-red-500 mb-6">Réservez une table</h1>
+
+    <!-- Bloc erreur serveur -->
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div class="mb-6 rounded-lg border border-red-500/40 bg-red-500/10 text-red-200 px-4 py-3">
+        <p class="font-semibold">Erreur</p>
+        <p class="text-sm"><%= error %></p>
+      </div>
+    <% } %>
+
+    <form action="/reservation" method="POST" class="space-y-6">
+      <!-- 👤 Nom & Prénom -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="lastname" class="block mb-1 text-sm font-medium text-gray-100">Nom</label>
+          <input
+            type="text" id="lastname" name="lastname" required
+            value="<%= F.lastname || '' %>"
+            class="input w-full bg-white text-gray-900 placeholder-gray-500 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500"
+          />
+        </div>
+        <div>
+          <label for="firstname" class="block mb-1 text-sm font-medium text-gray-100">Prénom</label>
+          <input
+            type="text" id="firstname" name="firstname" required
+            value="<%= F.firstname || '' %>"
+            class="input w-full bg-white text-gray-900 placeholder-gray-500 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500"
+          />
+        </div>
+      </div>
+
+      <!-- 📞 Téléphone & Email -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="phone" class="block mb-1 text-sm font-medium text-gray-100">Téléphone</label>
+          <input
+            type="tel" id="phone" name="phone" required autocomplete="tel"
+            value="<%= F.phone || '' %>"
+            class="input w-full bg-white text-gray-900 placeholder-gray-500 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500"
+          />
+        </div>
+        <div>
+          <label for="email" class="block mb-1 text-sm font-medium text-gray-100">Email</label>
+          <input
+            type="email" id="email" name="email" required autocomplete="email"
+            value="<%= F.email || '' %>"
+            class="input w-full bg-white text-gray-900 placeholder-gray-500 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500"
+          />
+        </div>
+      </div>
+
+      <!-- 📅 Date & Heure -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="date" class="block mb-1 text-sm font-medium text-gray-100">Date</label>
+          <input
+            type="date" id="date" name="date" required
+            value="<%= F.date || '' %>"
+            class="input w-full bg-white text-gray-900 placeholder-gray-500 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500"
+          />
+        </div>
+        <div>
+          <label for="time" class="block mb-1 text-sm font-medium text-gray-100">Heure</label>
+          <input
+            type="time" id="time" name="time" required step="900" list="timeOptions"
+            value="<%= F.time || '' %>"
+            disabled aria-disabled="true"
+            class="input w-full bg-white text-gray-900 placeholder-gray-500 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500 disabled:opacity-60 disabled:cursor-not-allowed"
+          />
+          <datalist id="timeOptions"></datalist>
+          <p id="hoursHint" class="mt-1 text-xs text-gray-300">
+            <%= F.date ? '' : "Choisissez une date pour afficher les horaires disponibles." %>
+          </p>
+          <p id="timeError" class="mt-1 text-sm text-red-500 hidden"></p>
+        </div>
+      </div>
+
+      <!-- 👥 Nombre de personnes -->
+      <div>
+        <label for="people" class="block mb-1 text-sm font-medium text-gray-100">Nombre de personnes</label>
+        <input
+          type="number" id="people" name="people" min="1" required
+          value="<%= (typeof F.people !== 'undefined' && F.people !== null) ? F.people : '' %>"
+          class="input w-full bg-white text-gray-900 placeholder-gray-500 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500"
+        />
+      </div>
+
+      <!-- ✉️ Message -->
+      <div>
+        <label for="message" class="block mb-1 text-sm font-medium text-gray-100">Message (facultatif)</label>
+        <textarea
+          id="message" name="message" rows="4"
+          class="input w-full bg-white text-gray-900 placeholder-gray-500 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500 resize-none"
+        ><%= F.message || '' %></textarea>
+      </div>
+
+      <!-- 🔘 Submit -->
+      <div class="text-center pt-4">
+        <button
+          type="submit"
+          class="bg-red-600 hover:bg-red-700 px-8 py-2 rounded-full text-white font-medium shadow transition duration-300 hover:scale-105"
+        >
+          Réserver
+        </button>
+      </div>
+    </form>
+  </div>
+</main>
+
+<script>
+  // === Horaires d'ouverture (0=Dim ... 6=Sam) — adapte ici ===
+  const OPENING_HOURS = {
+    0: [], // Dimanche fermé
+    1: [['10:00','14:30'], ['18:00','23:30']], // Lundi
+    2: [['10:00','14:30'], ['18:00','23:30']], // Mardi
+    3: [['10:00','14:30'], ['18:00','23:30']], // Mercredi
+    4: [['10:00','14:30'], ['18:00','23:30']], // Jeudi
+    5: [['10:00','14:30'], ['18:00','00:30']], // Vendredi
+    6: [['10:00','14:30'], ['18:00','00:30']], // Samedi
+  };
+  const STEP_MINUTES = 15;
+
+  const dateEl   = document.getElementById('date');
+  const timeEl   = document.getElementById('time');
+  const listEl   = document.getElementById('timeOptions');
+  const hoursHint= document.getElementById('hoursHint');
+  const timeError= document.getElementById('timeError');
+  const formEl   = document.querySelector('form[action="/reservation"]');
+
+  // Utils
+  const pad = (n) => String(n).padStart(2,'0');
+  const toMinutes = (hhmm) => { const [h,m]=hhmm.split(':').map(Number); return h*60+m; };
+  const minutesToHHMM = (mins) => `${pad(Math.floor(mins/60))}:${pad(mins%60)}`;
+  const roundUpToStep = (mins, step) => Math.ceil(mins/step)*step;
+
+  function genSlots(start, end) {
+    let s = toMinutes(start), e = toMinutes(end);
+    if (e < s) e += 24*60; // plage qui dépasse minuit
+    const out = [];
+    for (let t = s; t <= e; t += STEP_MINUTES) out.push(minutesToHHMM(t % (24*60)));
+    return out;
+  }
+  function slotsForDay(day) {
+    const ranges = OPENING_HOURS[day] || [];
+    return ranges.flatMap(([a,b]) => genSlots(a,b));
+  }
+
+  function setDateMinToday() {
+    const todayIso = new Date().toISOString().slice(0,10);
+    dateEl.setAttribute('min', todayIso);
+  }
+
+  function disableTime(message) {
+    timeEl.value = '';
+    timeEl.disabled = true;
+    timeEl.setAttribute('aria-disabled','true');
+    listEl.innerHTML = '';
+    hoursHint.textContent = message || 'Choisissez une date pour afficher les horaires disponibles.';
+  }
+  function enableTime(message) {
+    timeEl.disabled = false;
+    timeEl.removeAttribute('aria-disabled');
+    hoursHint.textContent = message || '';
+  }
+
+  function updateTimeOptionsForDate() {
+    timeError.classList.add('hidden');
+    listEl.innerHTML = '';
+
+    const value = dateEl.value; // yyyy-mm-dd
+    if (!value) {
+      disableTime('Choisissez une date pour afficher les horaires disponibles.');
+      return;
+    }
+
+    const d = new Date(`${value}T00:00:00`);
+    const day = d.getDay(); // 0..6
+    let slots = slotsForDay(day);
+
+    // Si la date est aujourd'hui: filtrer les créneaux passés (arrondi prochain quart d'heure)
+    const todayIso = new Date().toISOString().slice(0,10);
+    if (value === todayIso) {
+      const now = new Date();
+      const nowMin = now.getHours()*60 + now.getMinutes();
+      const minAllowed = roundUpToStep(nowMin, STEP_MINUTES);
+      slots = slots.filter(hhmm => toMinutes(hhmm) >= minAllowed);
+    }
+
+    if (slots.length === 0) {
+      const isToday = value === todayIso;
+      disableTime(isToday ? "Plus de créneaux disponibles aujourd’hui." : "Fermé ce jour.");
+      return;
+    }
+
+    // Remplir datalist
+    const frag = document.createDocumentFragment();
+    slots.forEach(hhmm => {
+      const opt = document.createElement('option');
+      opt.value = hhmm;
+      frag.appendChild(opt);
+    });
+    listEl.appendChild(frag);
+
+    const ranges = (OPENING_HOURS[day] || []).map(([a,b]) => `${a}–${b}`).join(' et ');
+    enableTime(`Horaires disponibles : ${ranges} (créneaux de ${STEP_MINUTES} min)`);
+
+    if (timeEl.value && !slots.includes(timeEl.value)) {
+      timeEl.value = '';
+    }
+  }
+
+  function validateTimeAgainstOpenHours(e) {
+    timeError.classList.add('hidden');
+
+    const dateVal = dateEl.value;
+    const timeVal = timeEl.value;
+
+    if (!dateVal) {
+      e.preventDefault();
+      timeError.textContent = "Sélectionnez d'abord une date.";
+      timeError.classList.remove('hidden');
+      dateEl.focus();
+      return;
+    }
+
+    if (timeEl.disabled || !timeVal) {
+      e.preventDefault();
+      timeError.textContent = "Sélectionnez une heure d'ouverture pour ce jour.";
+      timeError.classList.remove('hidden');
+      timeEl.focus();
+      return;
+    }
+
+    const day = new Date(`${dateVal}T00:00:00`).getDay();
+    let slots = slotsForDay(day);
+
+    const todayIso = new Date().toISOString().slice(0,10);
+    if (dateVal === todayIso) {
+      const now = new Date();
+      const nowMin = now.getHours()*60 + now.getMinutes();
+      const minAllowed = roundUpToStep(nowMin, STEP_MINUTES);
+      slots = slots.filter(hhmm => toMinutes(hhmm) >= minAllowed);
+    }
+
+    if (!slots.includes(timeVal)) {
+      e.preventDefault();
+      timeError.textContent = "L’heure choisie n’est pas dans les horaires d’ouverture.";
+      timeError.classList.remove('hidden');
+      timeEl.focus();
+    }
+  }
+
+  // Init
+  setDateMinToday();
+  if (dateEl.value) {
+    updateTimeOptionsForDate();
+  } else {
+    disableTime('Choisissez une date pour afficher les horaires disponibles.');
+  }
+
+  // Events
+  dateEl?.addEventListener('change', updateTimeOptionsForDate);
+  formEl?.addEventListener('submit', validateTimeAgainstOpenHours);
+</script>

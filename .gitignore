@@ -1,0 +1,116 @@
+# === Logs ===
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# === Diagnostic reports ===
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# === Runtime data ===
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# === Node-specific ===
+node_modules/
+jspm_packages/
+bower_components
+.lock-wscript
+build/Release
+
+# === Extra directories (from old gitignore) ===
+lib-cov
+web_modules/
+
+# === Tools ===
+.grunt
+.nyc_output
+coverage
+*.lcov
+.eslintcache
+.stylelintcache
+.vscode/
+.yarn-integrity
+
+# === Caches ===
+.cache
+.parcel-cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# === Output / Build ===
+dist
+out
+.next
+.nuxt
+.vuepress/dist
+.temp
+public/assets/css/output.css
+
+# === Data ===
+data/*.json
+~$*.docx
+
+# === Env ===
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+!.env.example  # on versionne le modèle d'env
+
+# === Misc ===
+.docusaurus
+.serverless/
+.fusebox/
+.dynamodb/
+.firebase/
+.tern-port
+.vitepress/cache
+.vitepress/dist
+.svelte-kit/
+.vscode-test
+.pnp.*
+*.tsbuildinfo
+*.tgz
+
+# === Snapshots (local only) ===
+_snapshot-*.txt
+
+# === Other caches (from old gitignore) ===
+.npm
+.node_repl_history
+
+# === Server data (JSON persistance côté contact/réservation) ===
+server/data/*.json
+
+# === Logs (où qu'ils soient) ===
+**/logs/
+
+# === CSS sourcemaps (si activés un jour) ===
+public/assets/css/*.map
+
+# === OS / éditeurs ===
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+.idea/
+
+# === TLS / Keys (par précaution) ===
+*.pem
+*.key
+*.crt
+*.bak

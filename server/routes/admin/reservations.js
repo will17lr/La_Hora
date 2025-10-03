@@ -1,48 +1,53 @@
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
-const router = express.Router();
+// server/routes/admin/reservations.js
+const router = require('express').Router();
+const Reservation = require('../../models/Reservation');
 
-const filePath = path.join(__dirname, '../../../data/reservations.json');
+// normalise un doc Mongo en un objet commun pour la vue
+function normalize(r) {
+  return {
+    date: r.date ?? '',
+    heure: r.heure ?? r.time ?? '',
+    nom: r.nom ?? r.lastname ?? '',
+    prenom: r.prenom ?? r.firstname ?? '',
+    personnes: Number.isFinite(r.personnes) ? r.personnes : parseInt(r.people || '0', 10) || 0,
+    telephone: r.telephone ?? r.phone ?? '',
+    email: r.email ?? '',
+    message: r.message ?? '',
+    _id: r._id?.toString(),
+    createdAt: r.createdAt,
+  };
+}
 
-// GET : afficher toutes les réservations
-router.get('/', (req, res) => {
-  fs.readFile(filePath, 'utf-8', (err, data) => {
-    if (err) return res.status(500).send('Erreur serveur');
-    
-    let reservations = [];
-    try {
-      reservations = JSON.parse(data || '[]');
-    } catch (e) {
-      console.error('Erreur JSON :', e.message);
-      return res.status(500).send('Erreur de format de données.');
-    }
+// Liste des réservations (Admin)
+router.get('/', async (req, res) => {
+  const docs = await Reservation.find().sort({ createdAt: -1 }).lean();
+  const reservations = docs.map(normalize);
 
-    res.render('admin/reservations', { title: 'Admin – La Hora', reservations });
+  const now = new Date();
+  const aVenir = reservations.filter(r => {
+    const d = new Date(`${r.date}T${r.heure || '00:00'}`);
+    return !Number.isNaN(d.getTime()) && d >= now;
+  }).length;
+
+  const kpis = {
+    total: reservations.length,
+    aVenir,
+  };
+
+  res.render('admin/reservations', {
+    layout: 'partials/layout-admin',
+    title: 'Réservations',
+    kpis,
+    reservations,
+    adminEmail: req.session?.admin?.email || null,
   });
 });
 
-// POST : suppression d'une réservation
-router.post('/delete/:id', (req, res) => {
-  const idToDelete = parseInt(req.params.id);
-
-  fs.readFile(filePath, 'utf-8', (err, data) => {
-    if (err) return res.status(500).send('Erreur lecture');
-
-    let reservations = [];
-    try {
-      reservations = JSON.parse(data || '[]');
-    } catch (e) {
-      return res.status(500).send('Erreur de format JSON');
-    }
-
-    reservations = reservations.filter(r => r.id !== idToDelete);
-
-    fs.writeFile(filePath, JSON.stringify(reservations, null, 2), err => {
-      if (err) return res.status(500).send('Erreur écriture');
-      res.redirect('/admin/reservations');
-    });
-  });
+// Suppression par _id
+router.post('/:id/delete', async (req, res) => {
+  const { id } = req.params;
+  if (id) await Reservation.findByIdAndDelete(id).catch(() => {});
+  res.redirect('/admin/reservations');
 });
 
 module.exports = router;

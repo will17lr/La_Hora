@@ -1,42 +1,69 @@
-<!-- ✅ Contenu principal de la page d’accueil -->
+<!-- views/pages/index.ejs -->
 
-<!-- ✅ Héro -->
-<section class="relative min-h-screen flex items-center justify-center pt-24 bg-center bg-no-repeat bg-contain md:bg-cover" style="background-image: url('/assets/img/bar.jpg');">
-  <div class="absolute inset-0 bg-black/60 z-10"></div>
+<!-- === HERO === -->
+<section class="relative isolate bg-[var(--noir)] overflow-x-clip">
+  <!-- MOBILE -->
+  <div class="md:hidden pt-2">
+    <!-- Cercle géant centré -->
+    <figure
+      class="relative left-1/2 -translate-x-1/2 w-[120vw] max-w-none aspect-square rounded-full overflow-hidden border border-[var(--or)]/60 shadow-lg">
+      <img src="/assets/img/bar.jpg" alt="La Hora"
+           class="w-full h-full object-cover object-top select-none pointer-events-none" />
+      <div class="absolute inset-0 bg-black/10"></div>
+    </figure>
 
-  <div class="relative z-20 text-center text-creme px-4 fade-in">
-    <h1 class="text-or text-4xl font-cinzel tracking-wide uppercase mb-4">La Hora</h1>
-    <p class="text-lg sm:text-xl mb-6">Cocktails, ambiance et bonne musique</p>
-    <a href="/carte" class="bg-red-600 hover:bg-red-700 active:scale-95 transition transform duration-200 text-white px-6 py-2 rounded-full">
-      Voir la carte
-    </a>
+    <!-- CTA sous l'image -->
+    <div class="mt-6 flex justify-center">
+      <a href="/carte" class="btn-primary px-6 py-2 shadow-md rounded-full">Voir la carte</a>
+    </div>
+  </div>
+
+  <!-- TABLET/DESKTOP -->
+  <div class="hidden md:block">
+    <div class="mx-auto max-w-5xl px-4 py-6">
+      <figure class="relative w-full">
+        <img src="/assets/img/bar.jpg" alt="La Hora"
+             class="mx-auto w-full h-[68vh] object-contain rounded-2xl shadow-lg" />
+      </figure>
+      <div class="mt-6 text-center">
+        <a href="/carte" class="btn-primary px-8 py-3 rounded-full">Voir la carte</a>
+      </div>
+    </div>
   </div>
 </section>
 
 
 <main>
-  <section class="py-16 px-6 md:px-20 bg-gray-900">
-    <div class="max-w-4xl mx-auto text-center">
-      <h2 class="text-3xl font-bold text-or mb-4">Bienvenue à La Hora</h2>
-      <p class="text-lg text-gray-300">Un lieu unique où cocktails raffinés et musique envoûtante se rencontrent. Profitez de notre terrasse et de notre ambiance tamisée en plein cœur de la ville.</p>
+  <!-- === Section Bienvenue === -->
+  <section class="py-16 px-6 md:px-20 bg-[var(--noir)]">
+    <div class="max-w-4xl mx-auto text-center fade-in">
+      <h2 class="section-title mb-4">Bienvenue à La Hora</h2>
+      <p class="text-[var(--creme)]">
+        Un lieu unique où cocktails raffinés et musique envoûtante se rencontrent.
+        Profitez de notre terrasse et de notre ambiance tamisée en plein cœur de la ville.
+      </p>
     </div>
   </section>
 
-  <section class="py-16 bg-black">
-    <div class="max-w-5xl mx-auto px-4">
-      <h2 class="text-3xl text-center font-bold text-or mb-8">Notre Sélection</h2>
+  <!-- === Section Notre sélection === -->
+  <section class="py-16 bg-[var(--noir)]">
+    <div class="max-w-5xl mx-auto px-4 fade-in">
+      <h2 class="section-title text-center mb-10">Notre Sélection</h2>
+
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 text-center">
-        <div>
-          <h3 class="text-xl font-semibold mb-2 text-white">Mojito</h3>
-          <p class="text-creme">Rhum, menthe, citron vert</p>
+        <div class="card py-6">
+          <h3 class="section-sub mb-2">Mojito</h3>
+          <p class="text-[var(--creme)]">Rhum, menthe, citron vert</p>
         </div>
-        <div>
-          <h3 class="text-xl font-semibold mb-2 text-white">Spritz</h3>
-          <p class="text-creme">Aperol, prosecco, soda</p>
+
+        <div class="card py-6">
+          <h3 class="section-sub mb-2">Spritz</h3>
+          <p class="text-[var(--creme)]">Aperol, prosecco, soda</p>
         </div>
-        <div>
-          <h3 class="text-xl font-semibold mb-2 text-white">Planche Charcuterie</h3>
-          <p class="text-creme">Produits locaux et fromage</p>
+
+        <div class="card py-6">
+          <h3 class="section-sub mb-2">Tapas</h3>
+          <p class="text-[var(--creme)]">Produits locaux et fromage</p>
         </div>
       </div>
     </div>

@@ -1,0 +1,148 @@
+<!-- views\partials\layout-admin.ejs -->
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= title %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="/assets/css/output.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-950 text-gray-100 min-h-screen flex">
+
+  <!-- Offcanvas (mobile) -->
+  <aside
+    id="admin-drawer"
+    class="fixed inset-y-0 left-0 z-40 w-72 max-w-[85vw] translate-x-[-100%] md:translate-x-0 md:static md:w-64
+           bg-gray-900 border-r border-gray-800 transition-transform duration-200 ease-out
+           flex flex-col"
+    aria-hidden="true"
+  >
+    <div class="px-5 py-4 border-b border-gray-800 flex items-center justify-between md:hidden">
+      <span class="text-lg font-semibold text-yellow-400">La Hora — Admin</span>
+      <button id="btn-close-drawer" class="p-2 rounded hover:bg-gray-800" aria-label="Fermer le menu">
+        ✕
+      </button>
+    </div>
+
+    <div class="px-5 py-5 hidden md:flex border-b border-gray-800">
+      <h1 class="text-xl font-bold text-yellow-400">La Hora — Admin</h1>
+    </div>
+
+    <nav class="flex-1 overflow-y-auto py-4">
+      <ul class="px-2 space-y-1">
+        <li>
+          <a href="/admin" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800">
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin/carte" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800">
+            <span>Carte</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin/reservations" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800">
+            <span>Réservations</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="px-4 py-4 border-t border-gray-800">
+      <form method="post" action="/admin/logout">
+        <button class="w-full px-4 py-2 rounded bg-red-600 hover:bg-red-500">Déconnexion</button>
+      </form>
+      <% if (adminEmail) { %>
+        <p class="mt-2 text-xs text-gray-400">Connecté : <%= adminEmail %></p>
+      <% } %>
+    </div>
+  </aside>
+
+  <!-- Colonne principale -->
+  <div class="flex-1 flex flex-col min-w-0">
+    <!-- Topbar -->
+    <header class="sticky top-0 z-30 bg-gray-900/80 backdrop-blur border-b border-gray-800">
+      <div class="h-14 px-4 md:px-6 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <button id="btn-open-drawer" class="p-2 rounded hover:bg-gray-800 md:hidden" aria-label="Ouvrir le menu" aria-controls="admin-drawer" aria-expanded="false">
+            ☰
+          </button>
+          <span class="hidden sm:inline text-or-400 font-semibold">Panneau d’administration</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="/" class="text-sm text-gray-300 hover:text-white hidden sm:inline">← Retour au site</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Contenu -->
+    <main class="flex-1 px-4 md:px-8 py-6">
+      <%- body %>
+    </main>
+
+    <!-- Footer -->
+    <footer class="px-4 md:px-8 py-4 border-t border-gray-800 text-sm text-gray-400">
+      &copy; <%= new Date().getFullYear() %> La Hora — Administration
+    </footer>
+  </div>
+
+  <!-- Script minimal pour le burger -->
+  <script>
+    (function () {
+      const drawer = document.getElementById('admin-drawer');
+      const openBtn = document.getElementById('btn-open-drawer');
+      const closeBtn = document.getElementById('btn-close-drawer');
+      const mq = window.matchMedia('(min-width: 768px)');
+
+      let opened = false;
+
+      function openDrawer() {
+        drawer.style.transform = 'translateX(0)';
+        drawer.setAttribute('aria-hidden', 'false');
+        openBtn?.setAttribute('aria-expanded', 'true');
+        opened = true;
+        trapFocus();
+      }
+      function closeDrawer() {
+        if (mq.matches) return; // en md+ le drawer est fixe
+        drawer.style.transform = 'translateX(-100%)';
+        drawer.setAttribute('aria-hidden', 'true');
+        openBtn?.setAttribute('aria-expanded', 'false');
+        opened = false;
+        releaseFocus();
+      }
+
+      openBtn?.addEventListener('click', openDrawer);
+      closeBtn?.addEventListener('click', closeDrawer);
+      window.addEventListener('keydown', (e) => {
+        if (opened && e.key === 'Escape') closeDrawer();
+      });
+      // Fermer si on passe en md+
+      mq.addEventListener?.('change', e => { if (e.matches) releaseFocus(); });
+
+      // Accessibilité : piège du focus sur le drawer en mobile
+      let prevFocus = null;
+      function trapFocus() {
+        prevFocus = document.activeElement;
+        const focusables = drawer.querySelectorAll('a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        if (focusables.length) focusables[0].focus();
+        document.addEventListener('focus', onFocus, true);
+      }
+      function releaseFocus() {
+        document.removeEventListener('focus', onFocus, true);
+        if (prevFocus && prevFocus.focus) prevFocus.focus();
+      }
+      function onFocus(e) {
+        if (!opened) return;
+        if (!drawer.contains(e.target)) {
+          e.stopPropagation();
+          // renvoyer le focus dans le drawer
+          const focusables = drawer.querySelectorAll('a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
+          if (focusables.length) focusables[0].focus();
+        }
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -37,8 +37,8 @@ module.exports = {
       },
       fontFamily: {
         cinzel: ['Cinzel', 'serif'],
-        montserrat: ['Montserrat', 'sans-serif'],
-        didact: ['Didact Gothic', 'sans-serif'],
+        // montserrat: ['Montserrat', 'sans-serif'],
+        // didact: ['Didact Gothic', 'sans-serif'],
       },
     },
   },

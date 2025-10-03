@@ -1,3 +1,4 @@
+<!-- views/pages/carte-selection.ejs -->
 <% title = "Carte – La Hora" %>
 
 <main class="pt-24 pb-16 px-4 md:px-20">
@@ -9,27 +10,33 @@
   </div>
 
   <!-- Choix visuel -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-12 fade-in">
-    <a href="/carte?moment=matin" class="relative group overflow-hidden rounded-lg shadow-lg">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto mb-12 fade-in">
+  <a href="/carte?moment=matin" class="relative group overflow-hidden rounded-lg shadow-lg bg-[#121212]">
+    <div class="img-box h-64 md:h-auto">
       <img src="/assets/img/matin.jpg" alt="Carte du matin"
-           class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105" />
-      <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-xl font-semibold">
-        ☕ Voir la carte du matin
-      </div>
-    </a>
+           class="w-full h-full object-cover md:object-contain transition-transform duration-500 group-hover:scale-105" />
+    </div>
+    <div class="absolute inset-0 bg-black/40 flex items-center justify-center text-noir text-xl font-cinzel">
+      ☕ Voir la carte du matin
+    </div>
+  </a>
 
-    <a href="/carte?moment=soir" class="relative group overflow-hidden rounded-lg shadow-lg">
+  <a href="/carte?moment=soir" class="relative group overflow-hidden rounded-lg shadow-lg bg-[#121212]">
+    <div class="img-box h-64 md:h-auto">
       <img src="/assets/img/soir.jpg" alt="Carte du soir"
-           class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105" />
-      <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-xl font-semibold">
-        🍸 Voir la carte du soir
-      </div>
-    </a>
-  </div>
+           class="w-full h-full object-cover md:object-contain transition-transform duration-500 group-hover:scale-105" />
+    </div>
+    <div class="absolute inset-0 bg-black/40 flex items-center justify-center text-white text-xl font-cinzel">
+      🍸 Voir la carte du soir
+    </div>
+  </a>
+</div>
+
+
 
   <!-- Boutons -->
   <div class="text-center space-y-4 fade-in">
-    <a href="/carte" class="inline-block bg-rouge hover:bg-rougefonce text-white px-6 py-2 rounded-full transition">
+    <a href="/carte" class="inline-block bg-or hover:bg-or/80 text-noir font-cinzel px-6 py-2 rounded-full transition">
       🔁 Voir automatiquement la carte du moment
     </a>
     <!-- <br />

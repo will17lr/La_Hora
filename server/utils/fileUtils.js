@@ -1,3 +1,4 @@
+// server/utils/sendEmail.js (CommonJS)
 const fs = require('fs');
 const readJSON = (filePath) =>
   JSON.parse(fs.readFileSync(filePath, 'utf-8'));

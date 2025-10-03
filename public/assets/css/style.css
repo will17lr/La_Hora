@@ -2,117 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 🎯 HERO avec image de fond + overlay */
-.hero-background {
-  background-image: url('../img/bar.jpg'); /* vérifie le chemin selon ta structure */
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
-.hero-background::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.75));
-  z-index: 0;
-}
-.hero-content {
-  position: relative;
-  z-index: 10;
+/* Utilitaires légers seulement */
+@layer base {
+  html { @apply antialiased; }
+  body { @apply leading-relaxed; }
 }
 
-/* ✨ Fade-in (Observer.js ou Tailwind + JS) */
-.fade-in {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+/* Helpers ratio image */
+@layer utilities {
+  .img-box { aspect-ratio: 1 / 1; }
 }
-.fade-in.appear {
-  opacity: 1;
-  transform: translateY(0);
-}
+@media (min-width: 768px) and (orientation: portrait) { .img-box { aspect-ratio: 3 / 4; } }
+@media (min-width: 768px) and (orientation: landscape),
+       (min-width: 1024px) { .img-box { aspect-ratio: 16 / 9; } }
 
-/* 🔍 Zoom-in progressif */
-.zoom-in {
-  transform: scale(0.95);
-  opacity: 0;
-  transition: all 0.6s ease;
-}
-.zoom-in.appear {
-  transform: scale(1);
-  opacity: 1;
-}
-
-/* 🎆 Parallax background */
-.parallax-bg {
-  background-attachment: fixed;
-  background-size: cover;
-  background-position: center;
-}
-
-/* 🧊 Effet Glassmorphism */
-.glass {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 1rem;
-}
-
-/* 🖼️ Carte image avec effet de survol */
-.card-hover-scale {
-  transition: transform 0.3s ease-in-out;
-}
-.card-hover-scale:hover {
-  transform: scale(1.05);
-}
-
-/* 👤 Image staff ronde avec ombre */
-.staff-img {
-  width: 8rem;
-  height: 8rem;
-  object-fit: cover;
-  border-radius: 9999px;
-  margin: 0 auto 0.75rem;
-  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.1);
-}
-
-/* 🎯 Bouton CTA principal */
-.btn-primary {
-  background-color: #dc2626; /* rouge vif */
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 9999px;
-  transition: transform 0.2s ease, background-color 0.2s ease;
-  font-size: 1rem;
-  font-weight: 600;
-  text-transform: uppercase;
+/* Police Cinzel pour tous les titres et boutons */
+h1, h2, h3, h4, h5, h6,
+.section-title,
+.section-sub,
+.btn,
+.btn-primary,
+.btn-ghost,
+.btn-danger {
+  font-family: 'Cinzel', serif !important;
   letter-spacing: 0.05em;
-}
-.btn-primary:hover {
-  background-color: #b91c1c;
-  transform: scale(1.05);
-}
-
-/* 📱 Responsive */
-@media (max-width: 768px) {
-  .hero-background {
-    background-position: top center;
-  }
-  h1 {
-    font-size: 2rem;
-  }
-  p {
-    font-size: 1rem;
-  }
-  .btn-primary {
-    font-size: 0.875rem;
-    padding: 0.5rem 1rem;
-  }
-}
-
-/* 🌐 Scroll fluide */
-html {
-  scroll-behavior: smooth;
 }

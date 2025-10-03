@@ -1,52 +1,42 @@
+<!-- views/pages/confirmation.ejs -->
 <% title = "Confirmation — La Hora" %>
 <%
-  const kind = (typeof type !== 'undefined' && type === 'contact') ? 'contact' : 'reservation';
-  const resv = (typeof reservation !== 'undefined' && reservation) ? reservation : null;
-  const hasError = (typeof error !== 'undefined' && error);
+  const kind = (typeof type === 'string' && type === 'contact') ? 'contact' : 'reservation';
+  const resv = (typeof reservation === 'object' && reservation) ? reservation : null;
+  const hasError = Boolean(typeof error !== 'undefined' && error);
+
+  const H1 = (kind === 'contact') ? 'Message envoyé' : 'Réservation confirmée';
+  const LEAD = (kind === 'contact')
+    ? "Merci ! Nous revenons vers vous au plus vite."
+    : "Merci ! Votre demande a bien été prise en compte.";
 %>
 
-<main class="pt-24 pb-16 px-6 md:px-20">
-  <div class="max-w-xl mx-auto text-center bg-gray-900 bg-opacity-80 p-8 rounded-lg shadow-lg">
+<main class="pt-24 pb-16 px-6 md:px-20 bg-[var(--noir)]">
+  <section class="max-w-xl mx-auto card fade-in text-center" aria-labelledby="confirm-title">
     <% if (hasError) { %>
-      <p class="text-red-500 mb-4"><%= error %></p>
-    <% } %>
-
-    <h1 class="text-3xl font-bold mb-6 <%= kind==='contact' ? 'text-blue-400' : 'text-green-500' %>">
-      <%= kind === 'contact' ? 'Message envoyé !' : 'Réservation confirmée !' %>
-    </h1>
-
-    <p class="text-gray-300 mb-6">
-      <%= kind === 'contact'
-          ? "Merci pour votre message. Nous revenons vers vous dès que possible."
-          : "Merci pour votre réservation. Nous avons bien reçu votre demande." %>
-    </p>
-
-    <% if (resv) { %>
-      <div class="text-left bg-gray-800 bg-opacity-60 rounded-lg p-4 mb-6">
-        <p class="text-gray-200"><strong>Nom :</strong> <%= resv.firstname || '' %> <%= resv.lastname || '' %></p>
-        <p class="text-gray-200"><strong>Date :</strong> <%= resv.date || '' %></p>
-        <p class="text-gray-200"><strong>Heure :</strong> <%= resv.time || '' %></p>
-        <p class="text-gray-200"><strong>Personnes :</strong> <%= resv.people || '' %></p>
-        <% if (resv.phone) { %><p class="text-gray-200"><strong>Téléphone :</strong> <%= resv.phone %></p><% } %>
-        <% if (resv.email) { %><p class="text-gray-200"><strong>Email :</strong> <%= resv.email %></p><% } %>
-        <% if (resv.message) { %><p class="text-gray-200"><strong>Message :</strong> <%= resv.message %></p><% } %>
+      <div class="mb-6 rounded-lg border border-red-500/40 bg-red-500/10 text-or px-4 py-3">
+        <p class="font-semibold">Erreur</p>
+        <p class="text-sm"><%= error %></p>
       </div>
-    <% } else if (kind !== 'contact') { %>
-      <p class="text-sm text-gray-500 mb-6">Aucune réservation à afficher.</p>
     <% } %>
 
-    <a href="/" class="inline-block bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full transition duration-200">
-      Retour à l'accueil
-    </a>
-  </div>
-</main>
+    <h1 id="confirm-title" class="section-title mb-4"><%= H1 %> ✅</h1>
+    <p class="text-or mb-8"><%= LEAD %></p>
 
-<script>
-  // Animation fade-in
-  document.addEventListener('DOMContentLoaded', () => {
-    const block = document.querySelector('.fade-in');
-    if (block) {
-      requestAnimationFrame(() => block.classList.add('opacity-100', 'translate-y-0'));
-    }
-  });
-</script>
+    <% if (kind === 'reservation' && resv) { %>
+      <div class="text-left bg-black/30 rounded-lg p-4 mb-8">
+        <p class="text-or"><strong>Nom :</strong> <%= (resv.firstname || '') + ' ' + (resv.lastname || '') %></p>
+        <p class="text-or"><strong>Date :</strong> <%= resv.date || '—' %></p>
+        <p class="text-or"><strong>Heure :</strong> <%= resv.time || '—' %></p>
+        <p class="text-or"><strong>Personnes :</strong> <%= resv.people || '—' %></p>
+        <% if (resv.phone) { %><p class="text-or"><strong>Téléphone :</strong> <%= resv.phone %></p><% } %>
+        <% if (resv.email) { %><p class="text-or"><strong>Email :</strong> <%= resv.email %></p><% } %>
+        <% if (resv.message) { %><p class="text-or"><strong>Message :</strong> <%= resv.message %></p><% } %>
+      </div>
+    <% } %>
+
+    <div class="flex justify-center">
+      <a href="/" class="btn-primary rounded-full">Retour à l’accueil</a>
+    </div>
+  </section>
+</main>

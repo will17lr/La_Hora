@@ -1,34 +1,21 @@
 // server/controllers/contact.controller.js
-// Contact page + form processing (safe, with optional mail & JSON persistence)
+// Contact page + form processing (EMAIL_* + JSON optional)
 
 const path = require('path');
 const fs = require('fs/promises');
-
 let nodemailer = null;
-try { nodemailer = require('nodemailer'); } catch { /* nodemailer non installé : ok */ }
+try { nodemailer = require('nodemailer'); } catch { /* nodemailer non installé */ }
 
-// ===== Options via .env (toutes facultatives) =====
-// MAIL_ENABLED=true
-// MAIL_HOST=smtp.example.com
-// MAIL_PORT=587
-// MAIL_SECURE=false          // true pour 465
-// MAIL_USER=xxxx
-// MAIL_PASS=xxxx
-// MAIL_FROM="La Hora <no-reply@lahora.fr>"
-// MAIL_TO=contact@lahora.fr
-//
-// CONTACT_SAVE_JSON=true     // pour sauvegarder dans /server/data/messages.json
-
-// ===== Helpers =====
-const trim = (v) => (typeof v === 'string' ? v.trim() : '');
+// ---------- Helpers ----------
+const trim  = (v) => (typeof v === 'string' ? v.trim() : '');
 const isEmail = (e) => /^\S+@\S+\.\S+$/.test(trim(e));
 const clamp = (s, max) => (typeof s === 'string' && s.length > max ? s.slice(0, max) : s);
 
-// Petit répertoire de sauvegarde JSON (si activé)
+// ---------- JSON persistence (facultatif) ----------
 const DATA_DIR = path.join(__dirname, '../../data');
 const MESSAGES_JSON = path.join(DATA_DIR, 'messages.json');
 
-// ===== GET /contact =====
+// GET /contact
 function getContactPage(req, res, next) {
   try {
     return res.status(200).render('pages/contact', { title: 'Contact — La Hora' });
@@ -37,18 +24,17 @@ function getContactPage(req, res, next) {
   }
 }
 
-// ===== POST /contact =====
+// POST /contact
 async function postContact(req, res, next) {
   try {
-    // Champs attendus (+ un honeypot facultatif "website")
     const { name, email, phone, subject, message, website } = req.body || {};
 
-    // Anti-spam simple : si le champ "website" (caché dans le formulaire) est rempli → on renvoie succès silencieux
+    // Honeypot anti-spam : si rempli → succès silencieux
     if (website && String(website).trim().length > 0) {
-      return res.redirect('/confirmation?type=contact');
+      return res.redirect(303, '/confirmation?type=contact');
     }
 
-    // Normalisation & coupe des champs trop longs (évite payload énormes)
+    // Normalisation
     const payload = {
       name:    clamp(trim(name), 100),
       email:   trim(email),
@@ -69,20 +55,29 @@ async function postContact(req, res, next) {
       });
     }
 
-    // ===== Option: Envoi d’email (si activé et nodemailer dispo) =====
-    if (process.env.MAIL_ENABLED === 'true' && nodemailer) {
+    // ===== Envoi d’e-mail (EMAIL_* — activé si host + user + pass) =====
+    const MAIL_HOST   = process.env.EMAIL_HOST;
+    const MAIL_PORT   = Number(process.env.EMAIL_PORT || 587);
+    const MAIL_SECURE = String(process.env.EMAIL_SECURE || 'false') === 'true'; // true => 465
+    const MAIL_USER   = process.env.EMAIL_USER;
+    const MAIL_PASS   = process.env.EMAIL_PASS;
+    const MAIL_FROM   = process.env.EMAIL_FROM || `"La Hora" <${MAIL_USER}>`;
+    const MAIL_TO     = process.env.EMAIL_TO   || MAIL_USER;
+
+    const MAIL_ENABLED = Boolean(MAIL_HOST && MAIL_USER && MAIL_PASS);
+
+    if (MAIL_ENABLED && nodemailer) {
       try {
         const transporter = nodemailer.createTransport({
-          host: process.env.MAIL_HOST,
-          port: Number(process.env.MAIL_PORT || 587),
-          secure: String(process.env.MAIL_SECURE || 'false') === 'true', // true = 465
-          auth: (process.env.MAIL_USER && process.env.MAIL_PASS)
-            ? { user: process.env.MAIL_USER, pass: process.env.MAIL_PASS }
-            : undefined,
+          host: MAIL_HOST,
+          port: MAIL_PORT,
+          secure: MAIL_SECURE,
+          auth: { user: MAIL_USER, pass: MAIL_PASS },
         });
 
-        const from = process.env.MAIL_FROM || `"La Hora" <no-reply@lahora.fr>`;
-        const to   = process.env.MAIL_TO   || 'contact@lahora.fr';
+        // Vérification non bloquante (log en warning si échec)
+        await transporter.verify().catch(e => console.warn('[contact] SMTP verify:', e.message));
+
         const subj = payload.subject
           ? `[Contact] ${payload.subject}`
           : `Nouveau message — ${payload.name || payload.email}`;
@@ -97,18 +92,24 @@ Date: ${payload.date}
 IP: ${payload.ip}
 UA: ${payload.ua}`;
 
-        await transporter.sendMail({
-          from, to,
+        const info = await transporter.sendMail({
+          from: MAIL_FROM,
+          to: MAIL_TO,
           subject: subj,
           text,
+          // html: text.replace(/\n/g, '<br/>'), // active si besoin d’HTML
         });
+
+        console.log('[contact] mail envoyé:', info.messageId);
       } catch (mailErr) {
-        // On log mais on n’empêche pas l’utilisateur d’avoir sa confirmation
-        console.warn('[contact] email delivery failed:', mailErr.message);
+        console.warn('[contact] email delivery failed:', mailErr.code || '', mailErr.message);
+        // On continue quand même vers la confirmation.
       }
+    } else {
+      console.log('[contact] envoi mail désactivé (variables EMAIL_* manquantes)');
     }
 
-    // ===== Option: Persistance JSON (si activée) =====
+    // ===== Persistance JSON locale (si activée) =====
     if (process.env.CONTACT_SAVE_JSON === 'true') {
       try {
         await fs.mkdir(DATA_DIR, { recursive: true });
@@ -117,9 +118,8 @@ UA: ${payload.ua}`;
           const raw = await fs.readFile(MESSAGES_JSON, 'utf8');
           arr = JSON.parse(raw);
           if (!Array.isArray(arr)) arr = [];
-        } catch {
-          arr = [];
-        }
+        } catch { arr = []; }
+
         arr.push({
           name: payload.name,
           email: payload.email,
@@ -128,13 +128,14 @@ UA: ${payload.ua}`;
           message: payload.message,
           date: payload.date,
         });
+
         await fs.writeFile(MESSAGES_JSON, JSON.stringify(arr, null, 2), 'utf8');
       } catch (fsErr) {
         console.warn('[contact] JSON persistence failed:', fsErr.message);
       }
     }
 
-    // ✅ Succès → Confirmation type=contact
+    // ✅ Succès : redirection confirmation
     return res.redirect(303, '/confirmation?type=contact');
   } catch (err) {
     return next(err);

@@ -1,23 +1,91 @@
-/* Animations utilitaires (complément à Tailwind) */
-
-/* Effet fade-in pour les sections */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* ========== Thème La Hora (CSS pur, pas de @layer/@apply) ========== */
+:root{
+  --noir:#0e0e0e;          /* fond */
+  --nuit:#0f172a;          /* carte sombre (bleu nuit) */
+  --creme:#f3efe7;         /* texte clair */
+  --or:#CBAF7A;            /* accent doré */
+  --rouge:#d84747;         /* titres / danger */
+  --voile:rgba(0,0,0,.35); /* overlay doux */
 }
 
-.fade-in {
-  opacity: 0;
-  animation: fadeIn 1s ease-out forwards;
+/* Fond & texte généraux */
+html{ background:var(--noir); color:var(--creme); }
+
+/* Cartes */
+.card{
+  background:rgba(15,23,42,.9);
+  color:var(--creme);
+  border-radius:1rem;           /* ~ rounded-2xl */
+  padding:1.5rem;               /* p-6 */
+  box-shadow:0 10px 20px rgba(0,0,0,.25);
 }
 
-/* Variante "appear" activée par IntersectionObserver */
-.appear {
-  opacity: 1;
+/* Titres */
+.section-title{
+  font-weight:700;
+  text-align:center;
+  text-transform:uppercase;
+  margin-bottom:2rem;
+  color:var(--or);
+  font-size:2.25rem;            /* text-4xl */
 }
+@media (min-width:768px){
+  .section-title{ font-size:3rem; } /* md:text-5xl */
+}
+
+.section-sub{
+  font-weight:600;
+  margin-bottom:1rem;
+  color:color-mix(in srgb, var(--or) 80%, white 20%);
+  font-size:1.5rem;             /* text-2xl */
+}
+
+/* Boutons */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  border-radius:9999px; padding:.5rem 1.25rem;
+  font-weight:600; transition:transform .15s ease, filter .15s ease, background-color .15s ease, color .15s ease;
+  text-decoration:none;
+}
+.btn-primary{ background:var(--or); color:#111; }
+.btn-primary:hover{ filter:brightness(.92); }
+
+.btn-ghost{
+  border:1px solid var(--or); color:var(--or);
+  background:transparent;
+}
+.btn-ghost:hover{ background:var(--or); color:#111; }
+
+.btn-danger{ background:var(--rouge); color:#fff; }
+.btn-danger:hover{ filter:brightness(.92); }
+
+/* Inputs (dans une card sombre) */
+.card input,.card textarea,.card select{
+  width:100%; background:#fff; color:#111 !important;
+  border:1px solid #d1d5db; border-radius:.5rem;
+  padding:.5rem .75rem; outline:none;
+}
+.card input::placeholder,.card textarea::placeholder{ color:#6b7280; }
+.card input[type="date"]::-webkit-calendar-picker-indicator,
+.card input[type="time"]::-webkit-calendar-picker-indicator{ filter:invert(0); }
+.card input:-webkit-autofill,.card textarea:-webkit-autofill,.card select:-webkit-autofill{
+  -webkit-text-fill-color:#111 !important;
+  transition:background-color 9999s ease-in-out 0s;
+}
+.card input:focus,.card textarea:focus,.card select:focus{
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--or) 40%, transparent);
+  border-color:var(--or);
+}
+.card input:disabled,.card textarea:disabled,.card select:disabled{ color:#374151 !important; }
+
+/* Fade-in simple */
+@keyframes fadeIn{ from{opacity:0; transform:translateY(20px)} to{opacity:1; transform:translateY(0)} }
+.fade-in{ opacity:0; animation:fadeIn 1s ease-out forwards; }
+.appear{ opacity:1; }
+
+/* Séparateur doré (header/footer) */
+.gold-divider{
+  width:100%; height:2px; margin-inline:auto;
+  background:linear-gradient(90deg, transparent 0%, rgba(212,175,55,.9) 10%, rgba(212,175,55,1) 50%, rgba(212,175,55,.9) 90%, transparent 100%);
+}
+@media (min-width:768px){ .gold-divider{ height:3px; } }

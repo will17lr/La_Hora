@@ -1,63 +1,99 @@
 // app.js
-const express = require('express');
+require('dotenv').config();
+console.log('[ENV CHECK]',
+  'ADMIN_EMAIL=', (process.env.ADMIN_EMAIL || process.env.EMAIL_USER || '(none)'),
+  'HASH_SET=', !!(process.env.ADMIN_PASSWORD_HASH && process.env.ADMIN_PASSWORD_HASH.startsWith('$2'))
+);
+
+
 const path = require('path');
+const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const helmet = require('helmet');
 const compression = require('compression');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+const flash = require('connect-flash');
+const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
+const methodOverride = require('method-override');           // ← NEW
 
-// ⚡ MongoDB
-const dotenv = require('dotenv');
-dotenv.config();
 const { connectDB } = require('./server/config/db.js');
 
 const app = express();
 const isProd = process.env.NODE_ENV === 'production';
+const PORT = process.env.PORT || 3000;
 
-// Petites sécurités globales
+// ── Sécurité de base
 app.disable('x-powered-by');
-if (isProd) app.set('trust proxy', 1); // si hébergé derrière un proxy (Render/Railway/Nginx)
+if (isProd) app.set('trust proxy', 1);
 
-// === Middlewares généraux ===
+// ── Parsers
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
+app.use(methodOverride('_method'));                           // ← NEW (support PUT/DELETE via formulaires)
 
+// ── Logs (dev)
 const { logger } = require('./server/middlewares/logger.middleware');
-// en dev seulement ? -> if (!isProd) app.use(logger);
-app.use(logger);
+if (!isProd) {
+  app.use(logger);
+  app.use(morgan('dev'));
+}
 
-
-// ✅ Sécurité & perf (activés en prod uniquement)
+// ── Sécu & perf (prod)
 if (isProd) {
-  // Helmet (CSP désactivée pour ne pas bloquer tes scripts inline actuels)
   app.use(helmet({
     contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false,
   }));
-
-  // Compression gzip/deflate pour les réponses > 1 Ko
   app.use(compression({ threshold: 1024 }));
 }
 
-// Static files (mets-le APRÈS compression pour compresser aussi le statique côté serveur)
+// ── Statique
 app.use(express.static(path.join(__dirname, 'public'), isProd ? {
-  maxAge: '7d',   // cache navigateur
+  maxAge: '7d',
   etag: true,
-  immutable: true
+  immutable: true,
 } : undefined));
 
-// === View engine (EJS + layouts) ===
+// ── Vues (EJS + layouts)
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
 app.use(expressLayouts);
-app.locals.title = 'La Hora';
 app.set('layout', 'partials/layout');
-// Faire remonter <style> et <script> des vues vers le layout
+app.locals.title = 'La Hora';
 app.set('layout extractStyles', true);
 app.set('layout extractScripts', true);
 app.set('layout extractMeta', true);
 
-// === Routes (import) ===
+// ── Sessions
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'change-me',
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI,
+    ttl: 60 * 60 * 24 * 7, // 7 jours
+  }),
+  cookie: {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: isProd,
+  },
+}));
+app.use(flash());
+
+// Locals communs aux vues (flash + infos admin)            // ← UPDATED
+app.use((req, res, next) => {
+  res.locals.flash = req.flash();
+  res.locals.user = req.user || null;
+  res.locals.isAdmin = !!req.session?.admin;                // défini après login admin
+  res.locals.adminEmail = req.session?.admin?.email || null;
+  next();
+});
+
+// ── Routes (pages publiques)
 const indexRoutes = require('./server/routes/pages/index');
 const reservationRoutes = require('./server/routes/pages/reservation');
 const carteRoutes = require('./server/routes/pages/carte');
@@ -67,16 +103,28 @@ const eventRoutes = require('./server/routes/pages/event');
 const carteSelectionRoutes = require('./server/routes/pages/carteSelection');
 const confirmationRoutes = require('./server/routes/pages/confirmation');
 
+// ── Admin (auth + dashboard + carte + reservations)
+const { isAuth, isRole } = require('./server/middlewares/auth.middleware');
+const adminAuthRoutes = require('./server/routes/admin/auth');     // ← NEW (/admin/login, /admin/logout)
+const adminIndexRoutes = require('./server/routes/admin/index');   // ← NEW (/admin)
+const adminCarteRoutes = require('./server/routes/admin/carte');   // ← NEW (/admin/carte)
+const adminReservationsRoutes = require('./server/routes/admin/reservations'); // ← Reservation
 
-const adminReservationRoutes = require('./server/routes/admin/reservations');
-const adminCarteRoutes = require('./server/routes/admin/carte');
-
-// === Debug page ===
+// Debug simple
 app.get('/debug-header', (req, res) => {
   res.render('pages/index', { title: 'Debug Header' });
 });
 
-// === Routes pages ===
+// ── Mount admin
+// Login/Logout accessibles sans isAuth                      // ← NEW
+app.use('/admin', adminAuthRoutes); // public (login/logout)
+
+// Routes admin protégées (dashboard + carte)                // ← NEW
+app.use('/admin', isAuth, isRole('admin','manager'), adminIndexRoutes);
+app.use('/admin/carte', isAuth, isRole('admin','manager'), adminCarteRoutes);
+app.use('/admin/reservations', isAuth, isRole('admin','manager'), adminReservationsRoutes);
+
+// ── Mount public
 app.use('/', indexRoutes);
 app.use('/reservation', reservationRoutes);
 app.use('/carte', carteRoutes);
@@ -86,14 +134,12 @@ app.use('/event', eventRoutes);
 app.use('/carte-selection', carteSelectionRoutes);
 app.use('/confirmation', confirmationRoutes);
 
-// === Routes API ===
-app.use('/api/admin/carte', adminCarteRoutes);
-app.use('/api/admin/reservations', adminReservationRoutes);
-
-// === 404 + erreurs ===
+// ── 404
 app.use((req, res) => {
   res.status(404).render('pages/404', { title: 'Page non trouvée' });
 });
+
+// ── Handler d’erreurs
 app.use((err, req, res, next) => {
   console.error('Erreur:', err);
   if (req.originalUrl.startsWith('/api/')) {
@@ -102,12 +148,10 @@ app.use((err, req, res, next) => {
   res.status(500).render('pages/500', { title: 'Erreur serveur' });
 });
 
-// === Lancement avec connexion DB ===
-const PORT = process.env.PORT || 3000;
-
+// ── Lancement après connexion MongoDB
 (async () => {
   try {
-    await connectDB(process.env.MONGODB_URI);   // ✅ connexion Mongo
+    await connectDB(process.env.MONGODB_URI);
     app.listen(PORT, () => {
       console.log(`✅ Serveur lancé sur http://localhost:${PORT} (${isProd ? 'prod' : 'dev'})`);
     });

@@ -1,33 +1,46 @@
-const express = require('express');
-const router = express.Router();
-const fs = require('fs');
-const path = require('path');
+// server/routes/admin/carte.js
+const router = require('express').Router();
+const { getCarte, upsertProduct, deleteProduct } = require('../../services/carte.service');
 
-const dataPath = path.join(__dirname, '../../../data/carte.json');
-
-// GET - Afficher l'interface
-router.get('/', (req, res) => {
-  fs.readFile(dataPath, 'utf-8', (err, data) => {
-    if (err) return res.status(500).send('Erreur lecture carte');
-    const carte = JSON.parse(data);
-    res.render('admin/carte', { carte });
+// Liste & formulaire
+router.get('/', async (req, res) => {
+  const carte = await getCarte();
+  res.render('admin/carte', {
+    layout: 'partials/layout-admin',
+    title: 'Gestion de la carte',
+    carte,
   });
 });
 
-// POST - Ajouter un produit
-router.post('/add', (req, res) => {
-  const { category, nom, description, prix } = req.body;
-  fs.readFile(dataPath, 'utf-8', (err, data) => {
-    const carte = err ? {} : JSON.parse(data);
-    carte[category] = carte[category] || [];
-    carte[category].push({ nom, description, prix: parseFloat(prix) });
-
-    fs.writeFile(dataPath, JSON.stringify(carte, null, 2), err => {
-      if (err) return res.status(500).send('Erreur sauvegarde');
-      res.redirect('/admin/carte');
-    });
+// Ajout
+router.post('/product', async (req, res) => {
+  const { moment, categorie, name, description, price, image } = req.body;
+  await upsertProduct({
+    moment,
+    categorie,
+    product: { name, description, price: parseFloat(price), image },
   });
+  res.redirect('/admin/carte');
 });
 
-// TODO : routes pour modifier/supprimer
+// Edition (par index)
+router.post('/product/:moment/:categorie/:index', async (req, res) => {
+  const { moment, categorie, index } = req.params;
+  const { name, description, price, image } = req.body;
+  await upsertProduct({
+    moment,
+    categorie,
+    index: parseInt(index, 10),
+    product: { name, description, price: parseFloat(price), image },
+  });
+  res.redirect('/admin/carte');
+});
+
+// Suppression
+router.post('/product/:moment/:categorie/:index/delete', async (req, res) => {
+  const { moment, categorie, index } = req.params;
+  await deleteProduct({ moment, categorie, index: parseInt(index, 10) });
+  res.redirect('/admin/carte');
+});
+
 module.exports = router;

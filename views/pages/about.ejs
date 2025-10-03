@@ -1,11 +1,12 @@
+<!-- views/pages/about.ejs -->
 <% title = "A propos de  – La Hora" %>
 
 <main class="pt-24 pb-16 px-6 md:px-20">
 
   <!-- Intro -->
   <section class="max-w-4xl mx-auto text-center mb-12 fade-in">
-    <h1 class="text-4xl font-bold text-red-500 mb-4">À propos de La Hora</h1>
-    <p class="text-gray-300 text-lg">
+    <h1 class="text-4xl font-bold text-or mb-4">À propos de La Hora</h1>
+    <p class="text-creme text-lg">
       Niché au cœur de La Rochelle, <strong>La Hora</strong> est un bar unique mêlant convivialité, saveurs et musique. 
       Venez pour un petit déjeuner paisible ou une soirée festive – l’ambiance évolue avec la journée.
     </p>
@@ -13,16 +14,16 @@
 
   <!-- Valeurs -->
   <section class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 fade-in">
-    <div class="bg-gray-900 bg-opacity-80 p-6 rounded-lg shadow">
-      <h2 class="text-2xl font-semibold text-red-400 mb-4">Notre philosophie</h2>
-      <p class="text-gray-300 leading-relaxed">
+    <div class="bg-creme bg-opacity-80 p-6 rounded-lg shadow">
+      <h2 class="text-2xl font-semibold text-amber-100 mb-4">Notre philosophie</h2>
+      <p class="text-amber-800 leading-relaxed">
         À La Hora, chaque moment compte. Nos produits sont soigneusement sélectionnés : des cocktails maison aux planches locales.
         Nous souhaitons vous offrir une expérience mémorable à chaque visite.
       </p>
     </div>
-    <div class="bg-gray-900 bg-opacity-80 p-6 rounded-lg shadow">
-      <h2 class="text-2xl font-semibold text-red-400 mb-4">Une équipe passionnée</h2>
-      <p class="text-gray-300 leading-relaxed">
+    <div class="bg-creme bg-opacity-80 p-6 rounded-lg shadow">
+      <h2 class="text-2xl font-semibold text-amber-100 mb-4">Une équipe passionnée</h2>
+      <p class="text-amber-800 leading-relaxed">
         Une équipe attentive et souriante vous accueille chaque jour avec enthousiasme. Notre objectif : vous faire sentir chez vous tout en vous surprenant.
       </p>
     </div>
@@ -30,8 +31,8 @@
 
   <!-- Équipe -->
   <section class="max-w-5xl mx-auto mb-12 fade-in">
-    <h2 class="text-3xl font-bold text-center text-red-500 mb-8">L'équipe</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
+    <h2 class="text-3xl font-bold text-center text-or mb-8">L'équipe</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center text-creme">
       <% const team = [
         { name: "Lucas", role: "Mixologue & Fondateur", img: "/assets/img/staff1.jpg" },
         { name: "Camille", role: "Responsable de salle", img: "/assets/img/staff2.jpg" },
@@ -41,17 +42,17 @@
       <% team.forEach(member => { %>
         <div>
           <img src="<%= member.img %>" alt="<%= member.name %>" class="w-32 h-32 rounded-full mx-auto mb-3 object-cover shadow" />
-          <h3 class="text-xl font-semibold"><%= member.name %></h3>
-          <p class="text-gray-400 text-sm"><%= member.role %></p>
+          <h3 class="text-creme text-xl font-semibold"><%= member.name %></h3>
+          <p class="text-creme text-sm"><%= member.role %></p>
         </div>
       <% }) %>
     </div>
   </section>
 
   <!-- Horaires -->
-  <section class="max-w-3xl mx-auto text-center bg-gray-800 bg-opacity-80 p-8 rounded-lg shadow fade-in">
-    <h2 class="text-2xl font-semibold text-red-500 mb-4">Horaires d’ouverture</h2>
-    <ul class="text-gray-300 text-lg space-y-2">
+  <section class="max-w-3xl mx-auto text-center bg-creme bg-opacity-80 p-8 rounded-lg shadow fade-in">
+    <h2 class="text-2xl font-semibold text-amber-100 mb-4">Horaires d’ouverture</h2>
+    <ul class="text-amber-800 text-lg space-y-2">
       <li><strong>Lundi – Jeudi :</strong> 17h00 – 01h00</li>
       <li><strong>Vendredi – Samedi :</strong> 17h00 – 02h00</li>
       <li><strong>Dimanche :</strong> Fermé</li>

@@ -1,0 +1,79 @@
+<!-- views/admin/dashboard.ejs -->
+<%- title = "Dashboard — La Hora" %>
+
+<section class="container py-8">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-bold text-yellow-400">Dashboard</h1>
+    <% if (adminEmail) { %>
+      <span class="text-sm text-gray-400">Connecté : <%= adminEmail %></span>
+    <% } %>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
+      <p class="text-xs uppercase text-gray-400">Réservations</p>
+      <p class="text-3xl font-semibold"><%= kpis?.reservations ?? 0 %></p>
+    </div>
+    <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
+      <p class="text-xs uppercase text-gray-400">Messages</p>
+      <p class="text-3xl font-semibold"><%= kpis?.messages ?? 0 %></p>
+    </div>
+    <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
+      <p class="text-xs uppercase text-gray-400">Accès rapide</p>
+      <div class="mt-2 flex gap-2">
+        <a href="carte.ejs" class="px-3 py-2 rounded bg-or-500 text-black hover:bg-or-400">Gérer la carte</a>
+        <a href="reservations.ejs" class="px-3 py-2 rounded border border-gray-700 hover:bg-gray-800">Réservations</a>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="text-xl font-semibold mb-2">Dernières réservations</h2>
+  <div class="overflow-x-auto mb-8">
+    <table class="min-w-full text-sm">
+      <thead class="text-gray-400">
+        <tr>
+          <th class="text-left py-2 pr-4">Date</th>
+          <th class="text-left py-2 pr-4">Nom</th>
+          <th class="text-left py-2 pr-4">Personnes</th>
+          <th class="text-left py-2 pr-4">Heure</th>
+          <th class="text-left py-2 pr-4">Téléphone</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% (reservations || []).slice(-10).reverse().forEach(r => { %>
+          <tr class="border-t border-gray-800">
+            <td class="py-2 pr-4"><%= r.date || '' %></td>
+            <td class="py-2 pr-4"><%= (r.nom || '') + ' ' + (r.prenom || '') %></td>
+            <td class="py-2 pr-4"><%= r.personnes || '' %></td>
+            <td class="py-2 pr-4"><%= r.heure || '' %></td>
+            <td class="py-2 pr-4"><%= r.telephone || '' %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="text-xl font-semibold mb-2">Derniers messages</h2>
+  <div class="overflow-x-auto">
+    <table class="min-w-full text-sm">
+      <thead class="text-gray-400">
+        <tr>
+          <th class="text-left py-2 pr-4">Date</th>
+          <th class="text-left py-2 pr-4">Nom</th>
+          <th class="text-left py-2 pr-4">Email</th>
+          <th class="text-left py-2 pr-4">Sujet</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% (contacts || []).slice(-10).reverse().forEach(c => { %>
+          <tr class="border-t border-gray-800">
+            <td class="py-2 pr-4"><%= c.date || '' %></td>
+            <td class="py-2 pr-4"><%= (c.nom || '') + ' ' + (c.prenom || '') %></td>
+            <td class="py-2 pr-4"><%= c.email || '' %></td>
+            <td class="py-2 pr-4"><%= c.sujet || '' %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>

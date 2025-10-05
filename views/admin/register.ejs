@@ -1,0 +1,68 @@
+<!-- views/admin/register.ejs -->
+<%- title = "Inscription admin — La Hora" %>
+<section class="max-w-md mx-auto py-10">
+  <h1 class="text-2xl font-semibold mb-6">Inscription Admin</h1>
+
+  <% if (error) { %>
+    <div class="mb-4 px-3 py-2 rounded bg-red-900/40 border border-red-700 text-red-200"><%= error %></div>
+  <% } %>
+
+  <form method="post" action="/admin/register" class="space-y-4">
+    <div>
+      <label class="block text-sm mb-1" for="email">Email</label>
+      <input id="email" class="w-full bg-gray-800 text-gray-100 rounded px-3 py-2"
+             type="email" name="email" value="<%= (values && values.email) || '' %>"
+             required autocomplete="username" autofocus>
+    </div>
+
+    <div>
+      <label class="block text-sm mb-1" for="password">Mot de passe</label>
+      <div class="relative">
+        <input id="password" class="w-full bg-gray-800 text-gray-100 rounded px-3 py-2 pr-12"
+               type="password" name="password" required autocomplete="new-password">
+        <button type="button" id="togglePassword"
+                class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-400 hover:text-gray-200"
+                aria-label="Afficher/masquer" aria-pressed="false">
+          <svg id="icon-eye" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/><circle cx="12" cy="12" r="3" stroke-width="2"/></svg>
+          <svg id="icon-eye-off" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a10.168 10.168 0 012.719-4.318M6.6 6.6C8.183 5.58 10.02 5 12 5c4.477 0 8.268 2.943 9.542 7a10.17 10.17 0 01-2.49 3.9M3 3l18 18"/></svg>
+        </button>
+      </div>
+      <label class="mt-2 inline-flex items-center gap-2 text-sm text-gray-300 select-none">
+        <input id="showPass" type="checkbox" class="accent-[var(--or,#d4af37)]"> Afficher le mot de passe
+      </label>
+    </div>
+
+    <div>
+      <label class="block text-sm mb-1" for="confirm">Confirmer le mot de passe</label>
+      <input id="confirm" class="w-full bg-gray-800 text-gray-100 rounded px-3 py-2"
+             type="password" name="confirm" required autocomplete="new-password">
+    </div>
+
+    <div>
+      <label class="block text-sm mb-1" for="invite">Code d’invitation</label>
+      <input id="invite" class="w-full bg-gray-800 text-gray-100 rounded px-3 py-2"
+             type="text" name="invite" required>
+    </div>
+
+    <button class="w-full px-4 py-2 rounded bg-or-500 text-white font-semibold hover:bg-or-400 transition">
+      Créer mon compte
+    </button>
+
+    <p class="text-sm text-gray-300 mt-3 text-center">
+      Déjà un compte ? <a class="text-or-400 hover:underline" href="/admin/login">Se connecter</a>
+    </p>
+  </form>
+</section>
+
+<script>
+  (function () {
+    const input = document.getElementById('password');
+    const btn = document.getElementById('togglePassword');
+    const eye = document.getElementById('icon-eye');
+    const eyeOff = document.getElementById('icon-eye-off');
+    const checkbox = document.getElementById('showPass');
+    function setVisible(v){ input.type=v?'text':'password'; btn?.setAttribute('aria-pressed', String(v)); eye?.classList.toggle('hidden', v); eyeOff?.classList.toggle('hidden', !v); if(checkbox&&checkbox.checked!==v) checkbox.checked=v; }
+    btn?.addEventListener('click',()=>setVisible(input.type==='password'));
+    checkbox?.addEventListener('change',(e)=>setVisible(e.target.checked));
+  })();
+</script>

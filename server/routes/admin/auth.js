@@ -1,3 +1,4 @@
+// server/routes/admin/auth.js
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 
@@ -57,7 +58,7 @@ router.post('/login', async (req, res) => {
     error: 'Identifiants invalides.',
     next,
     emailTyped: email || ''
-  });
+  });a
 });
 
 

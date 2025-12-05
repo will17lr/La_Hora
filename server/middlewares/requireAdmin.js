@@ -1,4 +1,7 @@
 module.exports = function requireAdmin(req, res, next) {
-  if (req.session?.admin) return next();
-  return res.redirect('/admin/login?next=' + encodeURIComponent(req.originalUrl));
+  if (!req.session || !req.session.admin) {
+    const nextUrl = encodeURIComponent(req.originalUrl || "/admin");
+    return res.redirect(`/admin/login?next=${nextUrl}`);
+  }
+  next();
 };

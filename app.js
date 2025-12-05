@@ -5,7 +5,6 @@ console.log('[ENV CHECK]',
   'HASH_SET=', !!(process.env.ADMIN_PASSWORD_HASH && process.env.ADMIN_PASSWORD_HASH.startsWith('$2'))
 );
 
-
 const path = require('path');
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
@@ -22,11 +21,16 @@ const { connectDB } = require('./server/config/db.js');
 
 const app = express();
 const isProd = process.env.NODE_ENV === 'production';
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 // ── Sécurité de base
 app.disable('x-powered-by');
-if (isProd) app.set('trust proxy', 1);
+if (isProd) {
+  app.set((req, res, next) => {
+    if (req.secure) return next();
+    return res.redirect(`https://${req.headers.host}${req.url}`);
+  });
+  }
 
 // ── Parsers
 app.use(express.urlencoded({ extended: true }));
@@ -80,6 +84,7 @@ app.use(session({
     httpOnly: true,
     sameSite: 'lax',
     secure: isProd,
+    maxAge: 1000 * 60 * 60 * 2, // 2H de session
   },
 }));
 app.use(flash());
@@ -104,25 +109,26 @@ const carteSelectionRoutes = require('./server/routes/pages/carteSelection');
 const confirmationRoutes = require('./server/routes/pages/confirmation');
 
 // ── Admin (auth + dashboard + carte + reservations)
-const { isAuth, isRole } = require('./server/middlewares/auth.middleware');
+//const { isAuth, isRole } = require('./server/middlewares/auth.middleware');
 const adminAuthRoutes = require('./server/routes/admin/auth');     // ← NEW (/admin/login, /admin/logout)
-const adminIndexRoutes = require('./server/routes/admin/index');   // ← NEW (/admin)
+const adminDashboardRoutes = require('./server/routes/admin/dashboard');   // ← NEW (/admin)
 const adminCarteRoutes = require('./server/routes/admin/carte');   // ← NEW (/admin/carte)
 const adminReservationsRoutes = require('./server/routes/admin/reservations'); // ← Reservation
+const requireAdmin = require('./server/middlewares/requireAdmin'); // ← NEW
 
 // Debug simple
 app.get('/debug-header', (req, res) => {
   res.render('pages/index', { title: 'Debug Header' });
 });
 
-// ── Mount admin
 // Login/Logout accessibles sans isAuth                      // ← NEW
 app.use('/admin', adminAuthRoutes); // public (login/logout)
-
+// ── Mount admin
 // Routes admin protégées (dashboard + carte)                // ← NEW
-app.use('/admin', isAuth, isRole('admin','manager'), adminIndexRoutes);
-app.use('/admin/carte', isAuth, isRole('admin','manager'), adminCarteRoutes);
-app.use('/admin/reservations', isAuth, isRole('admin','manager'), adminReservationsRoutes);
+app.use('/admin', requireAdmin, adminDashboardRoutes);
+app.use('/admin/carte', requireAdmin, adminCarteRoutes);
+app.use('/admin/reservations', requireAdmin, adminReservationsRoutes);
+
 
 // ── Mount public
 app.use('/', indexRoutes);

@@ -1,4 +1,4 @@
-// server/utils/sendEmail.js (CommonJS)
+// server/utils/sendEmail.js
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
@@ -8,13 +8,23 @@ const transporter = nodemailer.createTransport({
   auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
 });
 
-transporter.verify((err, ok) => {
-  console.log('[mail] transport', err ? `KO ${err.message}` : `OK ${ok}`);
+transporter.verify((err, success) => {
+  if (err) {
+    console.log('[mail] transport KO:', err.message);
+   } else {
+    console.log('[mail] transport OK');
+   }
 });
 
 module.exports = async ({ to, subject, text, html }) => {
   const fromName = process.env.EMAIL_FROM_NAME || 'La Hora';
   const from = process.env.EMAIL_FROM || process.env.EMAIL_USER;
-  const info = await transporter.sendMail({ from: `"${fromName}" <${from}>`, to, subject, text, html });
-  return info; // { messageId, ... }
+
+  return transporter.sendMail;({
+    from: `"${fromName}" <${from}>`,
+    to,
+    subject,
+    text,
+    html,
+  });
 };

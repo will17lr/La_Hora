@@ -1,3 +1,4 @@
+// server/routes/admin/dashboard.js
 const requireAdmin = require("../../middlewares/requireAdmin");
 const router = require("express").Router();
 const { getRecap } = require("../../services/recap.service");

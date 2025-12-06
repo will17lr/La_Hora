@@ -1,36 +1,35 @@
-<!-- views\partials\header.ejs -->
 <nav class="bg-noir bg-opacity-90 fixed w-full top-0 z-50 shadow-md font-montserrat transition duration-300">
   <div class="max-w-6xl mx-auto px-4">
     <div class="flex justify-between items-center h-16">
+
       <!-- Logo -->
       <a href="/" class="flex items-center space-x-3">
-        <img src="/assets/img/logo (2).jpg" alt="Logo La Hora" class="h-8 w-8 rounded-full object-cover" />
+        <img src="/assets/img/logo.jpg" alt="Logo La Hora" class="h-8 w-8 rounded-full object-cover" />
         <span class="text-or text-lg font-cinzel tracking-wide uppercase">La Hora</span>
       </a>
 
       <!-- Menu Desktop -->
       <div class="hidden md:flex space-x-6 items-center text-sm uppercase">
-        <a href="/" class="text-or hover:text-or transition">Accueil</a>
-        <a href="/carte-selection" class="text-or hover:text-or transition">Carte</a>
-        <a href="/reservation" class="text-or hover:text-or transition">Réservation</a>
-        <a href="/about" class="text-or hover:text-or transition">À propos</a>
-        <a href="/contact" class="text-or hover:text-or transition">Contact</a>
+        <a href="/" class="hover:text-creme transition">Accueil</a>
+        <a href="/carte-selection" class="hover:text-creme transition">Carte</a>
+        <a href="/reservation" class="hover:text-creme transition">Réservation</a>
+        <a href="/about" class="hover:text-creme transition">À propos</a>
+        <a href="/contact" class="hover:text-creme transition">Contact</a>
 
-        <!-- Réseaux sociaux -->
-        <div class="flex items-center gap-3 ml-4">
+        <div class="flex items-center gap-3 ml-4 opacity-80 hover:opacity-100">
           <a href="https://www.facebook.com/61575846207541" target="_blank">
-            <img src="/assets/icons/facebook.svg" alt="Facebook" class="h-5 w-5 opacity-80 hover:opacity-100">
+            <img src="/assets/icons/facebook.svg" alt="Facebook" class="h-5 w-5">
           </a>
           <a href="https://www.tiktok.com/" target="_blank">
-            <img src="/assets/icons/tiktok.svg" alt="TikTok" class="h-5 w-5 opacity-80 hover:opacity-100">
+            <img src="/assets/icons/tiktok.svg" alt="TikTok" class="h-5 w-5">
           </a>
           <a href="https://www.instagram.com/reel/DLxaX7buHsx/" target="_blank">
-            <img src="/assets/icons/instagram.svg" alt="Instagram" class="h-5 w-5 opacity-80 hover:opacity-100">
+            <img src="/assets/icons/instagram.svg" alt="Instagram" class="h-5 w-5">
           </a>
         </div>
       </div>
 
-      <!-- Mobile Menu Button -->
+      <!-- Bouton Mobile -->
       <div class="md:hidden">
         <button id="mobile-menu-btn" class="text-or text-2xl focus:outline-none" aria-label="Menu mobile">☰</button>
       </div>
@@ -44,39 +43,40 @@
     <a href="/reservation" class="block py-2 hover:text-creme transition">Réservation</a>
     <a href="/about" class="block py-2 hover:text-creme transition">À propos</a>
     <a href="/contact" class="block py-2 hover:text-creme transition">Contact</a>
+
     <div class="flex space-x-4 mt-4">
       <a href="https://www.facebook.com/61575846207541" target="_blank">
-        <img src="/assets/icons/facebook.svg" alt="Facebook" class="h-5 w-5 opacity-80 hover:opacity-100">
+        <img src="/assets/icons/facebook.svg" class="h-5 w-5">
       </a>
       <a href="https://www.tiktok.com/" target="_blank">
-        <img src="/assets/icons/tiktok.svg" alt="TikTok" class="h-5 w-5 opacity-80 hover:opacity-100">
+        <img src="/assets/icons/tiktok.svg" class="h-5 w-5">
       </a>
       <a href="https://www.instagram.com/reel/DLxaX7buHsx/" target="_blank">
-        <img src="/assets/icons/instagram.svg" alt="Instagram" class="h-5 w-5 opacity-80 hover:opacity-100">
+        <img src="/assets/icons/instagram.svg" class="h-5 w-5">
       </a>
     </div>
   </div>
-  <!-- Ligne dorée sous l'en-tête -->
-<div class="gold-divider"></div>
+
+  <div class="gold-divider"></div>
 </nav>
 
 <script>
-  const toggleBtn = document.getElementById("mobile-menu-btn");
-  const mobileMenu = document.getElementById("mobile-menu");
+  const btn = document.getElementById("mobile-menu-btn");
+  const menu = document.getElementById("mobile-menu");
 
-  toggleBtn.addEventListener("click", () => {
-    mobileMenu.classList.toggle("hidden");
+  btn.addEventListener("click", () => {
+    menu.classList.toggle("hidden");
 
-    if (!mobileMenu.classList.contains("hidden")) {
-      mobileMenu.classList.add("translate-y-0", "opacity-100");
-      mobileMenu.classList.remove("-translate-y-4", "opacity-0");
+    if (menu.classList.contains("hidden")) {
+      menu.classList.remove("translate-y-0", "opacity-100");
+      menu.classList.add("-translate-y-4", "opacity-0");
     } else {
-      mobileMenu.classList.remove("translate-y-0", "opacity-100");
-      mobileMenu.classList.add("-translate-y-4", "opacity-0");
+      menu.classList.add("translate-y-0", "opacity-100");
+      menu.classList.remove("-translate-y-4", "opacity-0");
     }
   });
 
-  window.addEventListener("scroll", function () {
+  window.addEventListener("scroll", () => {
     const nav = document.querySelector("nav");
     if (window.scrollY > 30) {
       nav.classList.add("bg-black", "bg-opacity-95");

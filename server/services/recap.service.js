@@ -1,5 +1,5 @@
 // server/services/recap.service.js
-const Reservation = require('../models/Reservation');
+const Reservation = require('../models/reservation.model');
 const Contact = require('../models/Contact');
 
 async function getRecap() {

@@ -1,0 +1,72 @@
+<%- title = "Messages — La Hora" %>
+
+<section class="container py-8">
+
+  <!-- HEADER -->
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+      Messages reçus
+    </h1>
+
+    <a href="/admin"
+       class="text-sm text-gray-400 hover:text-gray-200 transition">
+      ← Retour au dashboard
+    </a>
+  </div>
+
+  <!-- LOG -->
+  <p class="mb-6 text-gray-400">
+    <span class="px-2 py-1 text-xs rounded-full bg-gray-800 border border-gray-700 text-gray-300">
+      <%= messages.length %> messages au total
+    </span>
+  </p>
+
+  <!-- TABLE PREMIUM -->
+  <div class="overflow-hidden rounded-2xl border border-gray-800 bg-gray-950/60 shadow-xl">
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="text-gray-400 bg-gray-900/90">
+          <tr>
+            <th class="text-left py-3 px-4">Date</th>
+            <th class="text-left py-3 px-4">Nom</th>
+            <th class="text-left py-3 px-4">Email</th>
+            <th class="text-left py-3 px-4">Sujet</th>
+            <th class="text-left py-3 px-4">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% messages.forEach(m => { %>
+            <tr class="border-t border-gray-800 hover:bg-gray-800/40 transition">
+
+              <td class="py-3 px-4 align-middle">
+                <%= m.date || m.createdAt.toISOString().slice(0, 10) %>
+              </td>
+
+              <td class="py-3 px-4 align-middle">
+                <%= m.nom %> <%= m.prenom %>
+              </td>
+
+              <td class="py-3 px-4 align-middle">
+                <%= m.email %>
+              </td>
+
+              <td class="py-3 px-4 align-middle max-w-[260px] truncate" title="<%= m.sujet %>">
+                <%= m.sujet %>
+              </td>
+
+              <td class="py-3 px-4 align-middle text-right">
+                <a href="/admin/messages/<%= m._id %>"
+                   class="inline-flex items-center gap-1 text-xs px-3 py-1 rounded-full bg-gray-800 hover:bg-gray-700 text-blue-300 border border-gray-700 transition">
+                  Voir ↗
+                </a>
+              </td>
+
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</section>

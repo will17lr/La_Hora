@@ -1,4 +1,4 @@
-const CarteItem = require('../models/CarteItem');
+const CarteItem = require('../models/Carteitem');
 
 const ORDER = {
   matin: ['chaudes', 'petitdejeuner', 'sirops', 'softs', 'bieres'],

@@ -1,11 +1,33 @@
 // server/models/Contact.js
 const mongoose = require('mongoose');
+
 const ContactSchema = new mongoose.Schema({
-  nom: String,
-  prenom: String,
-  email: String,
-  sujet: String,
-  message: String,
-  date: String,
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    trim: true,
+    lowercase: true,
+  },
+  phone: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  subject: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  message: {
+    type: String,
+    required: true,
+    trim: true,
+  },
 }, { timestamps: true });
-module.exports = mongoose.models.Contact || mongoose.model('Contact', ContactSchema);
+
+module.exports = mongoose.model('Contact', ContactSchema);

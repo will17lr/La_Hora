@@ -1,0 +1,73 @@
+<%- title = "Message — La Hora" %>
+
+<section class="container py-8">
+
+  <!-- HEADER -->
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+      Message reçu
+    </h1>
+
+    <a href="/admin/messages"
+       class="text-sm text-gray-400 hover:text-gray-200 transition">
+      ← Retour aux messages
+    </a>
+  </div>
+
+
+  <!-- CARD PREMIUM -->
+  <div class="relative overflow-hidden bg-gray-900/80 border border-gray-800 rounded-2xl p-6 shadow-[0_0_40px_rgba(0,0,0,0.6)]">
+    
+    <div class="absolute inset-0 opacity-20 pointer-events-none bg-gradient-to-br from-blue-400/20 via-indigo-500/10 to-transparent"></div>
+
+    <div class="relative space-y-4">
+
+      <div class="flex items-center justify-between">
+        <h2 class="text-2xl font-semibold text-white">
+          <%= message.sujet %>
+        </h2>
+        <span class="px-2 py-1 text-xs rounded-full bg-gray-800 border border-gray-700 text-gray-300">
+          <%= message.date || new Date(message.createdAt).toLocaleString("fr-FR") %>
+        </span>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <p class="text-gray-400 text-xs uppercase">Nom</p>
+          <p class="text-white text-lg font-medium">
+            <%= message.nom %> <%= message.prenom %>
+          </p>
+        </div>
+
+        <div>
+          <p class="text-gray-400 text-xs uppercase">Email</p>
+          <p class="text-blue-300 text-lg font-medium">
+            <%= message.email %>
+          </p>
+        </div>
+      </div>
+
+      <hr class="border-gray-800 my-4" />
+
+      <div>
+        <p class="text-gray-400 text-xs uppercase mb-2">Message</p>
+        <div class="p-4 bg-gray-800/50 rounded-xl border border-gray-700 whitespace-pre-line text-gray-100">
+          <%= message.message %>
+        </div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="flex justify-end pt-4">
+        <form action="/admin/messages/<%= message._id %>/delete" method="post"
+              onsubmit="return confirm('Supprimer ce message ?');">
+          <button
+            class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-white text-sm font-medium transition">
+            Supprimer
+          </button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+</section>

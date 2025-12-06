@@ -1,3 +1,4 @@
+// scripts/send-mail-test.js
 require('dotenv').config();
 const nodemailer = require('nodemailer');
 

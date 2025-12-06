@@ -1,9 +1,9 @@
-// server/controllers/reservation.controller.js
+// server/controllers/pages/reservation.controller.js
 // Skeleton controller — reservation page + create
 
 let Reservation = null;
 try {
-  Reservation = require('../models/reservation.model.js');
+  Reservation = require('../../models/reservation.model.js');
 } catch {
   // Laisse null : fallback JSON possible si pas de Mongo
 }

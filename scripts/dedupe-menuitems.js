@@ -1,3 +1,4 @@
+// scripts/dedupe-menuitems.js
 const mongoose = require('mongoose');
 require('dotenv').config();
 

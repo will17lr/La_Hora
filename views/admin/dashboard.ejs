@@ -1,79 +1,220 @@
-<!-- views/admin/dashboard.ejs -->
 <%- title = "Dashboard — La Hora" %>
 
+<%
+  // Petite logique côté vue pour les stats du jour
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const todaysReservations = (reservations || []).filter(r => r.date === todayStr).length;
+  const todaysMessages = (contacts || []).filter(c => (c.date || '').startsWith(todayStr)).length;
+%>
+
 <section class="container py-8">
-  <div class="flex items-center justify-between mb-6">
-    <h1 class="text-3xl font-bold text-yellow-400">Dashboard</h1>
+
+  <!-- HEADER -->
+  <div class="flex items-center justify-between mb-10">
+    <div>
+      <h1 class="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-yellow-400 via-amber-300 to-orange-400 bg-clip-text text-transparent">
+        Dashboard
+      </h1>
+      <p class="mt-1 text-sm text-gray-400">
+        Vue d’ensemble de l’activité de La Hora
+      </p>
+    </div>
+
     <% if (adminEmail) { %>
-      <span class="text-sm text-gray-400">Connecté : <%= adminEmail %></span>
+      <div class="flex flex-col items-end gap-1">
+        <span class="px-3 py-1 rounded-full bg-gray-900 border border-gray-700 text-xs uppercase tracking-wide text-gray-300">
+          Administrateur
+        </span>
+        <span class="text-xs text-gray-500">
+          <%= adminEmail %>
+        </span>
+      </div>
     <% } %>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-    <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
-      <p class="text-xs uppercase text-gray-400">Réservations</p>
-      <p class="text-3xl font-semibold"><%= kpis?.reservations ?? 0 %></p>
+
+  <!-- KPIs “premium” -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+
+    <!-- Réservations totales -->
+    <div class="relative overflow-hidden bg-gray-900/90 border border-gray-800 rounded-2xl p-5 flex items-center gap-4
+                shadow-[0_0_40px_rgba(0,0,0,0.6)] hover:shadow-[0_0_50px_rgba(0,0,0,0.9)]
+                hover:-translate-y-0.5 transition transform">
+      <div class="absolute inset-0 opacity-20 pointer-events-none bg-gradient-to-br from-yellow-500/20 via-orange-400/10 to-transparent"></div>
+
+      <div class="relative flex items-center justify-center w-12 h-12 rounded-full bg-yellow-500/20 border border-yellow-500/40">
+        <span class="text-xl">📅</span>
+      </div>
+
+      <div class="relative">
+        <p class="text-xs uppercase tracking-wide text-gray-400">Réservations</p>
+        <p class="text-4xl font-bold text-white leading-tight"><%= kpis.reservations %></p>
+        <p class="mt-1 text-xs text-gray-500">
+          <span class="font-semibold text-yellow-300"><%= todaysReservations %></span> aujourd’hui
+        </p>
+      </div>
     </div>
-    <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
-      <p class="text-xs uppercase text-gray-400">Messages</p>
-      <p class="text-3xl font-semibold"><%= kpis?.messages ?? 0 %></p>
+
+    <!-- Messages -->
+    <div class="relative overflow-hidden bg-gray-900/90 border border-gray-800 rounded-2xl p-5 flex items-center gap-4
+                shadow-[0_0_40px_rgba(0,0,0,0.6)] hover:shadow-[0_0_50px_rgba(0,0,0,0.9)]
+                hover:-translate-y-0.5 transition transform">
+      <div class="absolute inset-0 opacity-20 pointer-events-none bg-gradient-to-br from-blue-500/20 via-indigo-500/10 to-transparent"></div>
+
+      <div class="relative flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 border border-blue-500/40">
+        <span class="text-xl">✉️</span>
+      </div>
+
+      <div class="relative">
+        <p class="text-xs uppercase tracking-wide text-gray-400">Messages</p>
+        <p class="text-4xl font-bold text-white leading-tight"><%= kpis.messages %></p>
+        <p class="mt-1 text-xs text-gray-500">
+          <span class="font-semibold text-blue-300"><%= todaysMessages %></span> aujourd’hui
+        </p>
+      </div>
     </div>
-    <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
-      <p class="text-xs uppercase text-gray-400">Accès rapide</p>
-      <div class="mt-2 flex gap-2">
-        <a href="carte.ejs" class="px-3 py-2 rounded bg-or-500 text-black hover:bg-or-400">Gérer la carte</a>
-        <a href="reservations.ejs" class="px-3 py-2 rounded border border-gray-700 hover:bg-gray-800">Réservations</a>
+
+    <!-- Slot “bar premium” (placeholder métrique) -->
+    <div class="relative overflow-hidden bg-gray-900/90 border border-gray-800 rounded-2xl p-5 flex items-center gap-4
+                shadow-[0_0_40px_rgba(0,0,0,0.6)] hover:shadow-[0_0_50px_rgba(0,0,0,0.9)]
+                hover:-translate-y-0.5 transition transform">
+      <div class="absolute inset-0 opacity-20 pointer-events-none bg-gradient-to-br from-emerald-500/20 via-lime-400/10 to-transparent"></div>
+
+      <div class="relative flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-500/40">
+        <span class="text-xl">⭐</span>
+      </div>
+
+      <div class="relative">
+        <p class="text-xs uppercase tracking-wide text-gray-400">À personnaliser</p>
+        <p class="text-3xl font-bold text-white leading-tight">KPI bar</p>
+        <p class="mt-1 text-xs text-gray-500">
+          Tu pourras y afficher une statistique métier (taux de remplissage, soirées à thème, etc.).
+        </p>
       </div>
     </div>
   </div>
 
-  <h2 class="text-xl font-semibold mb-2">Dernières réservations</h2>
-  <div class="overflow-x-auto mb-8">
-    <table class="min-w-full text-sm">
-      <thead class="text-gray-400">
-        <tr>
-          <th class="text-left py-2 pr-4">Date</th>
-          <th class="text-left py-2 pr-4">Nom</th>
-          <th class="text-left py-2 pr-4">Personnes</th>
-          <th class="text-left py-2 pr-4">Heure</th>
-          <th class="text-left py-2 pr-4">Téléphone</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% (reservations || []).slice(-10).reverse().forEach(r => { %>
-          <tr class="border-t border-gray-800">
-            <td class="py-2 pr-4"><%= r.date || '' %></td>
-            <td class="py-2 pr-4"><%= (r.nom || '') + ' ' + (r.prenom || '') %></td>
-            <td class="py-2 pr-4"><%= r.personnes || '' %></td>
-            <td class="py-2 pr-4"><%= r.heure || '' %></td>
-            <td class="py-2 pr-4"><%= r.telephone || '' %></td>
-          </tr>
-        <% }) %>
-      </tbody>
-    </table>
+
+  <!-- CONTENU DEUX COLONNES -->
+  <div class="grid grid-cols-1 xl:grid-cols-2 gap-10">
+
+    <!-- DERNIÈRES RÉSERVATIONS -->
+    <div>
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-xl font-semibold text-white flex items-center gap-2">
+          Dernières réservations
+          <span class="text-xs px-2 py-0.5 rounded-full bg-gray-800 text-gray-300 border border-gray-700">
+            <%= (reservations || []).length %> au total
+          </span>
+        </h2>
+        <a href="/admin/reservations" class="text-xs text-yellow-300 hover:text-yellow-200">
+          Voir toutes &rarr;
+        </a>
+      </div>
+
+      <div class="overflow-hidden rounded-xl border border-gray-800 bg-gray-950/60">
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm">
+            <thead class="text-gray-400 bg-gray-900/80">
+              <tr>
+                <th class="text-left py-2 px-3">Date</th>
+                <th class="text-left py-2 px-3">Nom</th>
+                <th class="text-left py-2 px-3">Personnes</th>
+                <th class="text-left py-2 px-3">Heure</th>
+                <th class="text-left py-2 px-3">Téléphone</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% (reservations || []).slice(-10).reverse().forEach(r => { 
+                   const isToday = r.date === todayStr;
+              %>
+                <tr class="border-t border-gray-800 hover:bg-gray-800/40 transition">
+                  <td class="py-2 px-3 align-middle">
+                    <span><%= r.date || '' %></span>
+                    <% if (isToday) { %>
+                      <span class="ml-2 text-[10px] px-1.5 py-0.5 rounded-full bg-yellow-500/15 text-yellow-300 border border-yellow-500/40">
+                        Aujourd’hui
+                      </span>
+                    <% } %>
+                  </td>
+                  <td class="py-2 px-3 align-middle">
+                    <%= (r.nom || '') + ' ' + (r.prenom || '') %>
+                  </td>
+                  <td class="py-2 px-3 align-middle"><%= r.personnes || '' %></td>
+                  <td class="py-2 px-3 align-middle"><%= r.heure || '' %></td>
+                  <td class="py-2 px-3 align-middle"><%= r.telephone || '' %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- DERNIERS MESSAGES -->
+    <div>
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-xl font-semibold text-white flex items-center gap-2">
+          Derniers messages
+          <span class="text-xs px-2 py-0.5 rounded-full bg-gray-800 text-gray-300 border border-gray-700">
+            <%= (contacts || []).length %> au total
+          </span>
+        </h2>
+        <a href="/admin/messages" class="text-xs text-yellow-300 hover:text-yellow-200">
+          Voir tous &rarr;
+        </a>
+      </div>
+
+      <div class="overflow-hidden rounded-xl border border-gray-800 bg-gray-950/60">
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm">
+            <thead class="text-gray-400 bg-gray-900/80">
+              <tr>
+                <th class="text-left py-2 px-3">Date</th>
+                <th class="text-left py-2 px-3">Nom</th>
+                <th class="text-left py-2 px-3">Email</th>
+                <th class="text-left py-2 px-3">Sujet</th>
+                <th class="text-left py-2 px-3">Voir</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% (contacts || []).slice(-10).reverse().forEach(c => { 
+                   const isTodayMsg = (c.date || '').startsWith(todayStr);
+              %>
+                <tr class="border-t border-gray-800 hover:bg-gray-800/40 transition">
+                  <td class="py-2 px-3 align-middle">
+                    <span><%= c.date || '' %></span>
+                    <% if (isTodayMsg) { %>
+                      <span class="ml-2 text-[10px] px-1.5 py-0.5 rounded-full bg-blue-500/15 text-blue-300 border border-blue-500/40">
+                        Nouveau
+                      </span>
+                    <% } %>
+                  </td>
+                  <td class="py-2 px-3 align-middle">
+                    <%= (c.nom || '') + ' ' + (c.prenom || '') %>
+                  </td>
+                  <td class="py-2 px-3 align-middle"><%= c.email || '' %></td>
+                  <td class="py-2 px-3 align-middle truncate max-w-[180px]" title="<%= c.sujet || '' %>">
+                    <%= c.sujet || '' %>
+                  </td>
+                  <td class="py-2 px-3 align-middle">
+                    <a href="/admin/messages/<%= c._id %>"
+                       class="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full bg-gray-800 hover:bg-gray-700 text-blue-300 border border-gray-700 transition">
+                      <span>Voir</span>
+                      <span>↗</span>
+                    </a>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <h2 class="text-xl font-semibold mb-2">Derniers messages</h2>
-  <div class="overflow-x-auto">
-    <table class="min-w-full text-sm">
-      <thead class="text-gray-400">
-        <tr>
-          <th class="text-left py-2 pr-4">Date</th>
-          <th class="text-left py-2 pr-4">Nom</th>
-          <th class="text-left py-2 pr-4">Email</th>
-          <th class="text-left py-2 pr-4">Sujet</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% (contacts || []).slice(-10).reverse().forEach(c => { %>
-          <tr class="border-t border-gray-800">
-            <td class="py-2 pr-4"><%= c.date || '' %></td>
-            <td class="py-2 pr-4"><%= (c.nom || '') + ' ' + (c.prenom || '') %></td>
-            <td class="py-2 pr-4"><%= c.email || '' %></td>
-            <td class="py-2 pr-4"><%= c.sujet || '' %></td>
-          </tr>
-        <% }) %>
-      </tbody>
-    </table>
-  </div>
 </section>

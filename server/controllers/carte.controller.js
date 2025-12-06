@@ -1,5 +1,5 @@
 // server/controllers/pages/carte.controller.js
-const { getCarteAll, getCarteByMoment } = require('../../services/carte.service');
+const { getCarteAll, getCarteByMoment } = require('../services/carte.service');
 
 function hourInParis(date = new Date()) {
   const f = new Intl.DateTimeFormat('fr-FR', {

@@ -1,16 +1,25 @@
-// server/controllers/pages/reservation.controller.js
-// Skeleton controller — reservation page + create
+// 📁 server/controllers/pages/reservation.controller.js
 
+// ===============================
+// Chargement du modèle
+// ===============================
 let Reservation = null;
 try {
-  Reservation = require('../../models/reservation.model.js');
-} catch {
-  // Laisse null : fallback JSON possible si pas de Mongo
+  Reservation = require('../models/reservation.model');
+} catch (e) {
+  console.error("⚠ Impossible de charger Reservation model :", e.message);
 }
 
-// const { saveJson } = require('../utils/fileUtils'); // fallback JSON optionnel
+// ===============================
+// SERVICE MAIL CENTRALISÉ
+// ===============================
+function mailer(req) {
+  return req.app.locals.mailerService;
+}
 
+// ===============================
 // GET /reservation
+// ===============================
 function getReservationPage(req, res, next) {
   try {
     return res.status(200).render('pages/reservation', { title: 'Réservation — La Hora' });
@@ -19,26 +28,26 @@ function getReservationPage(req, res, next) {
   }
 }
 
+// ===============================
 // Helpers
+// ===============================
 const trimOrEmpty = (v) => (typeof v === 'string' ? v.trim() : '');
 const isValidEmail = (e) => /^\S+@\S+\.\S+$/.test(e);
 
 function makeLocalDateTime(dateStr, timeStr) {
-  // Attend "YYYY-MM-DD" + "HH:mm"
   if (!dateStr || !timeStr) return null;
   const dt = new Date(`${dateStr}T${timeStr}:00`);
   return Number.isNaN(dt.getTime()) ? null : dt;
 }
 
-// === Horaires d'ouverture (0=Dim ... 6=Sam) — adapte si besoin ===
 const OPENING_HOURS = {
-  0: [], // Dimanche fermé
-  1: [['10:00','14:30'], ['18:00','23:30']], // Lundi
-  2: [['10:00','14:30'], ['18:00','23:30']], // Mardi
-  3: [['10:00','14:30'], ['18:00','23:30']], // Mercredi
-  4: [['10:00','14:30'], ['18:00','23:30']], // Jeudi
-  5: [['10:00','14:30'], ['18:00','00:30']], // Vendredi (passe minuit)
-  6: [['10:00','14:30'], ['18:00','00:30']], // Samedi (passe minuit)
+  0: [],
+  1: [['10:00','14:30'], ['18:00','23:30']],
+  2: [['10:00','14:30'], ['18:00','23:30']],
+  3: [['10:00','14:30'], ['18:00','23:30']],
+  4: [['10:00','14:30'], ['18:00','23:30']],
+  5: [['10:00','14:30'], ['18:00','00:30']],
+  6: [['10:00','14:30'], ['18:00','00:30']],
 };
 
 function toMin(hhmm) {
@@ -46,24 +55,26 @@ function toMin(hhmm) {
   return h * 60 + m;
 }
 
-// heure ∈ [start,end] en gérant le passage minuit pour end < start
 function inRanges(hhmm, ranges) {
   const t = toMin(hhmm);
   return (ranges || []).some(([a, b]) => {
     const s = toMin(a), e = toMin(b);
-    if (e >= s) return t >= s && t <= e;   // plage normale
-    return t >= s || t <= e;               // plage qui passe minuit
+    if (e >= s) return t >= s && t <= e;
+    return t >= s || t <= e;
   });
 }
 
-// impose des créneaux de 15 minutes (00, 15, 30, 45)
 function isQuarterStep(hhmm) {
   const mins = Number(String(hhmm).split(':')[1] || 0);
   return mins % 15 === 0;
 }
 
+// ===============================
 // POST /reservation
+// ===============================
 async function postReservation(req, res, next) {
+  console.log("DEBUG Reservation =>", Reservation);
+
   try {
     const {
       date, time, people,
@@ -83,7 +94,7 @@ async function postReservation(req, res, next) {
 
     const dt = makeLocalDateTime(_date, _time);
 
-    // 1) Champs de base (avant les règles d'horaires pour des messages logiques)
+    // Vérifications
     if (
       !_date || !_time || !dt ||
       !Number.isInteger(_people) || _people < 1 ||
@@ -92,41 +103,38 @@ async function postReservation(req, res, next) {
     ) {
       return res.status(400).render('pages/reservation', {
         title: 'Réservation — La Hora',
-        error: 'Merci de compléter correctement tous les champs requis (date/heure valides, email valide, nombre de personnes ≥ 1).',
+        error: 'Merci de compléter tous les champs requis correctement.',
         form: { date: _date, time: _time, people: _people, firstname: _firstname, lastname: _lastname, phone: _phone, email: _email, message: _message },
       });
     }
 
-    // 2) Interdire date passée + heure passée si aujourd'hui
+    // Date passée
     const now = new Date();
-    const todayIso = now.toISOString().slice(0, 10); // YYYY-MM-DD
-    // journée passée
+    const todayIso = now.toISOString().slice(0, 10);
+
     if (new Date(`${_date}T00:00:00`) < new Date(`${todayIso}T00:00:00`)) {
       return res.status(400).render('pages/reservation', {
-        title: 'Réservation — La Hora',
         error: "La date choisie est déjà passée.",
         form: { date: _date, time: _time, people: _people, firstname: _firstname, lastname: _lastname, phone: _phone, email: _email, message: _message },
       });
     }
-    // heure passée (si aujourd'hui)
+
+    // Heure passée
     if (_date === todayIso) {
-      const nowMin = now.getHours() * 60 + now.getMinutes();
-      if (toMin(_time) < nowMin) {
+      if (toMin(_time) < toMin(`${now.getHours()}:${now.getMinutes()}`)) {
         return res.status(400).render('pages/reservation', {
-          title: 'Réservation — La Hora',
-          error: "L'heure choisie est déjà passée pour aujourd'hui.",
+          error: "L'heure choisie est déjà passée aujourd’hui.",
           form: { date: _date, time: _time, people: _people, firstname: _firstname, lastname: _lastname, phone: _phone, email: _email, message: _message },
         });
       }
     }
 
-    // 3) Horaires d'ouverture + pas de 15 min
+    // Horaires
     const day = new Date(`${_date}T00:00:00`).getDay();
     const todaysRanges = OPENING_HOURS[day] || [];
 
     if (todaysRanges.length === 0 || !inRanges(_time, todaysRanges)) {
       return res.status(400).render('pages/reservation', {
-        title: 'Réservation — La Hora',
         error: "L’heure choisie n’est pas dans les horaires d’ouverture.",
         form: { date: _date, time: _time, people: _people, firstname: _firstname, lastname: _lastname, phone: _phone, email: _email, message: _message },
       });
@@ -134,14 +142,16 @@ async function postReservation(req, res, next) {
 
     if (!isQuarterStep(_time)) {
       return res.status(400).render('pages/reservation', {
-        title: 'Réservation — La Hora',
-        error: "Les réservations se font par créneaux de 15 minutes (00, 15, 30, 45).",
+        error: "Les réservations se font par créneaux de 15 minutes.",
         form: { date: _date, time: _time, people: _people, firstname: _firstname, lastname: _lastname, phone: _phone, email: _email, message: _message },
       });
     }
 
-    // 4) Persistance : priorité Mongo si le modèle est dispo
+    // ===============================
+    // 🔐 Sauvegarde MongoDB
+    // ===============================
     let saved = null;
+
     if (Reservation && typeof Reservation.create === 'function') {
       saved = await Reservation.create({
         date: _date,
@@ -154,16 +164,25 @@ async function postReservation(req, res, next) {
         message: _message || '',
         createdAt: new Date(),
       });
-    } else {
-      // Fallback JSON (désactive si tu n’en veux pas)
-      // await saveJson(path.join(__dirname, '../../data/reservations.json'), { ... })
+
+      // ===============================
+      // 🔌 ENVOI DES EMAILS (PREMIUM + LIGHT)
+      // ===============================
+      try {
+        await mailer(req).sendReservationReceiptClient(_email, saved);
+        await mailer(req).notifyAdminReservation(saved);
+      } catch (mailErr) {
+        console.error("[mail] erreur:", mailErr);
+      }
     }
 
-    // 5) Redirection (avec id si dispo)
+    // Redirection
     if (saved && saved._id) {
       return res.redirect(`/reservation/confirmation?id=${saved._id.toString()}`);
     }
+
     return res.redirect('/confirmation');
+
   } catch (err) {
     return next(err);
   }

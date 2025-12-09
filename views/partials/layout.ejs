@@ -31,26 +31,34 @@
 </head>
 
 <%
-  // Sécurisation du thème : matin / soir uniquement
-  const currentMoment = (typeof moment !== 'undefined' && moment)
-    ? moment
-    : 'soir';
-
-  const safeMoment =
-    currentMoment === 'matin' || currentMoment === 'soir'
-      ? currentMoment
+  /* ────────────────────────────────
+     1) Résout la variable moment
+     ──────────────────────────────── */
+  const resolvedMoment =
+    typeof moment !== 'undefined' && moment
+      ? moment
       : 'soir';
 
+  /* ────────────────────────────────
+     2) Sécurise le thème
+     ──────────────────────────────── */
+  const safeMoment =
+    resolvedMoment === 'matin' || resolvedMoment === 'soir'
+      ? resolvedMoment
+      : 'soir';
+
+  /* ────────────────────────────────
+     3) Choix des classes de thème
+     ──────────────────────────────── */
   const themeClass =
     safeMoment === 'matin'
       ? 'bg-clairfond text-clairtexte'
       : 'bg-sombrefond text-sombretexte';
 %>
 
-
 <body class="<%= themeClass %> font-didact min-h-screen flex flex-col">
   
-  <%- include('header') %>
+  <%- include('header', { resolvedMoment }) %>
 
   <main class="grow pt-28 pb-16 px-6 md:px-20">
     <%- body %>
@@ -58,8 +66,30 @@
 
   <%- include('footer') %>
 
-  <!-- Scripts globaux -->
+  <!-- Script global fade-in -->
   <script src="/assets/js/fade-in.js" defer></script>
+
+  <!-- Script burger (déplacé ici pour fonctionner partout) -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const btn = document.getElementById("mobile-menu-btn");
+      const menu = document.getElementById("mobile-menu");
+
+      if (!btn || !menu) return;
+
+      btn.addEventListener("click", () => {
+        menu.classList.toggle("hidden");
+
+        if (menu.classList.contains("hidden")) {
+          menu.classList.remove("translate-y-0", "opacity-100");
+          menu.classList.add("-translate-y-4", "opacity-0");
+        } else {
+          menu.classList.add("translate-y-0", "opacity-100");
+          menu.classList.remove("-translate-y-4", "opacity-0");
+        }
+      });
+    });
+  </script>
 
   <!-- Scripts spécifiques à la vue -->
   <%- script %>

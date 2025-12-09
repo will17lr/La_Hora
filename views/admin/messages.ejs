@@ -1,63 +1,89 @@
+<!-- views/admin/messages.ejs -->
 <%- title = "Messages — La Hora" %>
 
 <section class="container py-8">
 
   <!-- HEADER -->
-  <div class="flex items-center justify-between mb-8">
-    <h1 class="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+  <div class="flex items-center justify-between mb-10">
+    <h1 class="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 via-indigo-300 to-blue-400 bg-clip-text text-transparent drop-shadow-sm">
       Messages reçus
     </h1>
 
     <a href="/admin"
-       class="text-sm text-gray-400 hover:text-gray-200 transition">
+       class="flex items-center gap-1 text-sm text-gray-400 hover:text-gray-200 transition">
       ← Retour au dashboard
     </a>
   </div>
 
   <!-- LOG -->
-  <p class="mb-6 text-gray-400">
-    <span class="px-2 py-1 text-xs rounded-full bg-gray-800 border border-gray-700 text-gray-300">
-      <%= messages.length %> messages au total
+  <p class="mb-6">
+    <span class="px-3 py-1 text-xs rounded-full border border-indigo-500/30 text-indigo-300 bg-indigo-500/10 shadow-sm">
+      <%= messages.length %> messages reçus
     </span>
   </p>
 
   <!-- TABLE PREMIUM -->
-  <div class="overflow-hidden rounded-2xl border border-gray-800 bg-gray-950/60 shadow-xl">
+  <div class="overflow-hidden rounded-2xl border border-gray-800 bg-gray-950/60 backdrop-blur-sm shadow-2xl">
     <div class="overflow-x-auto">
       <table class="min-w-full text-sm">
-        <thead class="text-gray-400 bg-gray-900/90">
-          <tr>
+        
+        <!-- TABLE HEADER -->
+        <thead class="text-gray-400 bg-gray-900/80">
+          <tr class="uppercase text-xs tracking-wider">
             <th class="text-left py-3 px-4">Date</th>
             <th class="text-left py-3 px-4">Nom</th>
             <th class="text-left py-3 px-4">Email</th>
             <th class="text-left py-3 px-4">Sujet</th>
-            <th class="text-left py-3 px-4">Action</th>
+            <th class="text-left py-3 px-4">Statut</th>
+            <th class="text-right py-3 px-4">Action</th>
           </tr>
         </thead>
 
+        <!-- TABLE BODY -->
         <tbody>
           <% messages.forEach(m => { %>
             <tr class="border-t border-gray-800 hover:bg-gray-800/40 transition">
 
-              <td class="py-3 px-4 align-middle">
-                <%= m.date || m.createdAt.toISOString().slice(0, 10) %>
+              <!-- Date -->
+              <td class="py-3 px-4 align-middle text-gray-300">
+                <%= new Date(m.createdAt).toISOString().slice(0, 10) %>
               </td>
 
-              <td class="py-3 px-4 align-middle">
-                <%= m.nom %> <%= m.prenom %>
+              <!-- Nom -->
+              <td class="py-3 px-4 align-middle font-medium text-gray-200">
+                <%= m.name %>
               </td>
 
-              <td class="py-3 px-4 align-middle">
+              <!-- Email -->
+              <td class="py-3 px-4 align-middle text-gray-400 truncate max-w-[180px]">
                 <%= m.email %>
               </td>
 
-              <td class="py-3 px-4 align-middle max-w-[260px] truncate" title="<%= m.sujet %>">
-                <%= m.sujet %>
+              <!-- Sujet -->
+              <td class="py-3 px-4 align-middle max-w-[240px] truncate text-gray-300"
+                  title="<%= m.subject %>">
+                <%= m.subject %>
               </td>
 
+              <!-- Statut -->
+              <td class="py-3 px-4 align-middle">
+                <% if (m.read) { %>
+                  <span class="px-2 py-0.5 text-xs rounded-full bg-green-500/20 text-green-300 border border-green-500/30">
+                    Lu
+                  </span>
+                <% } else { %>
+                  <span class="px-2 py-0.5 text-xs rounded-full bg-red-500/20 text-red-300 border border-red-500/30">
+                    Non lu
+                  </span>
+                <% } %>
+              </td>
+
+              <!-- Action -->
               <td class="py-3 px-4 align-middle text-right">
                 <a href="/admin/messages/<%= m._id %>"
-                   class="inline-flex items-center gap-1 text-xs px-3 py-1 rounded-full bg-gray-800 hover:bg-gray-700 text-blue-300 border border-gray-700 transition">
+                   class="inline-flex items-center gap-1 text-xs px-3 py-1 rounded-full 
+                          bg-gray-800 hover:bg-gray-700 text-blue-300 border border-gray-700 
+                          hover:border-blue-400 transition">
                   Voir ↗
                 </a>
               </td>
@@ -65,6 +91,7 @@
             </tr>
           <% }) %>
         </tbody>
+
       </table>
     </div>
   </div>

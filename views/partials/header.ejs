@@ -1,4 +1,7 @@
-<nav class="bg-noir bg-opacity-90 fixed w-full top-0 z-50 shadow-md font-montserrat transition duration-300">
+<!-- views/partials/header.ejs -->
+<nav class="bg-noir bg-opacity-90 fixed w-full top-0 z-50 shadow-md font-montserrat transition duration-300
+            <%= resolvedMoment === 'matin' ? 'nav-texte-blanc' : '' %>">
+
   <div class="max-w-6xl mx-auto px-4">
     <div class="flex justify-between items-center h-16">
 
@@ -36,6 +39,8 @@
     </div>
   </div>
 
+  <div class="gold-divider"></div>
+
   <!-- Menu Mobile -->
   <div id="mobile-menu" class="md:hidden hidden px-4 pb-4 bg-noir text-or text-sm uppercase font-medium transition-all duration-300 ease-in-out transform -translate-y-4 opacity-0">
     <a href="/" class="block py-2 hover:text-creme transition">Accueil</a>
@@ -56,32 +61,4 @@
       </a>
     </div>
   </div>
-
-  <div class="gold-divider"></div>
 </nav>
-
-<script>
-  const btn = document.getElementById("mobile-menu-btn");
-  const menu = document.getElementById("mobile-menu");
-
-  btn.addEventListener("click", () => {
-    menu.classList.toggle("hidden");
-
-    if (menu.classList.contains("hidden")) {
-      menu.classList.remove("translate-y-0", "opacity-100");
-      menu.classList.add("-translate-y-4", "opacity-0");
-    } else {
-      menu.classList.add("translate-y-0", "opacity-100");
-      menu.classList.remove("-translate-y-4", "opacity-0");
-    }
-  });
-
-  window.addEventListener("scroll", () => {
-    const nav = document.querySelector("nav");
-    if (window.scrollY > 30) {
-      nav.classList.add("bg-black", "bg-opacity-95");
-    } else {
-      nav.classList.remove("bg-black", "bg-opacity-95");
-    }
-  });
-</script>

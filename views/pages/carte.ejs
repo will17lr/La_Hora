@@ -35,126 +35,129 @@
 
 <main class="pt-24 pb-16 px-4 sm:px-8 md:px-20">
   <div class="max-w-5xl mx-auto">
+
     <!-- Onglets -->
     <nav class="mb-6 mt-2" role="tablist" aria-label="Choix du moment">
       <div class="hidden md:flex items-center justify-center gap-2">
-        <a href="/carte?moment=matin" role="tab" aria-selected="<%= moment==='matin' %>"
-           class="<%= tabCls(moment==='matin','min-w-[9rem]') %>">☕ Matin</a>
-        <a href="/carte?moment=all" role="tab" aria-selected="<%= isAll %>"
-           class="<%= tabCls(isAll,'min-w-[11rem]') %>">📜 Toute la carte</a>
-        <a href="/carte?moment=soir" role="tab" aria-selected="<%= moment==='soir' %>"
-           class="<%= tabCls(moment==='soir','min-w-[9rem]') %>">🍸 Soir</a>
+        <a href="/carte?moment=matin" class="<%= tabCls(moment==='matin','min-w-[9rem]') %>">☕ Matin</a>
+        <a href="/carte?moment=all"   class="<%= tabCls(isAll,'min-w-[11rem]') %>">📜 Toute la carte</a>
+        <a href="/carte?moment=soir"  class="<%= tabCls(moment==='soir','min-w-[9rem]') %>">🍸 Soir</a>
       </div>
     </nav>
 
     <!-- ===== Mode ALL ===== -->
     <% if (isAll) { %>
+
       <h1 class="text-4xl font-bold text-or mb-10 text-center fade-in">Carte — Matin & Soir</h1>
 
-      <% const orderMoments = ['matin','soir']; %>
-      <% orderMoments.forEach(function(m){ 
-           const bloc = (carte && carte[m]) ? carte[m] : {};
+      <% ['matin','soir'].forEach(m => {
+           const bloc = carte?.[m] || {};
            const entries = Object.entries(bloc);
       %>
+
         <h2 class="text-3xl font-semibold mt-10 mb-6 text-or">
           <%= m === 'matin' ? 'Matin ☕' : 'Soir 🍸' %>
         </h2>
 
-        <% if (!entries.length) { %>
-          <p class="text-sm text-gray-500 italic mb-8">Aucun produit pour ce moment.</p>
-        <% } %>
+        <% entries.forEach(([category, items]) => { %>
 
-        <% entries.forEach(function([category, items]){ %>
           <section class="mb-12 fade-in">
             <h3 class="text-2xl font-semibold mb-4 border-b border-gray-700 pb-1 text-or">
               <%= labelize(category) %>
             </h3>
 
-            <% if (!items || !items.length) { %>
+            <% if (!items?.length) { %>
               <p class="text-sm text-gray-500 italic">Bientôt disponible.</p>
             <% } else { %>
-              <ul class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <% items.forEach(function(item){ %>
-                  <li class="flex items-start bg-gray-900/80 p-4 rounded-lg shadow">
+
+              <ul class="grid grid-cols-[repeat(auto-fill,minmax(290px,1fr))] gap-6">
+                <% items.forEach(item => { %>
+
+                  <!-- 👇 MIN-W 290px grâce à la classe product-tile -->
+                  <li class="product-tile flex items-start bg-gray-900/80 p-4 rounded-lg shadow">
                     <% if (item.image) { %>
                       <img src="<%= item.image %>" alt="<%= item.name %>"
                            class="w-20 h-20 object-cover rounded mr-4"
-                           loading="lazy" decoding="async"
+                           loading="lazy"
                            onerror="this.src='/assets/img/placeholder.jpg'; this.onerror=null;">
                     <% } %>
+
                     <div>
                       <p class="text-lg font-medium text-white mb-1">
                         <%= item.name %>
-                        <% if (item.price !== undefined && item.price !== null && item.price !== '') { %>
+                        <% if (item.price !== null && item.price !== '') { %>
                           <span class="text-sm text-gray-400"> – <%= formatPrice(item.price) %></span>
                         <% } %>
                       </p>
+
                       <% if (item.description) { %>
                         <p class="text-sm text-gray-400"><%= item.description %></p>
                       <% } %>
                     </div>
                   </li>
+
                 <% }) %>
               </ul>
+
             <% } %>
           </section>
+
         <% }) %>
+
       <% }) %>
 
-    <!-- ===== Mode Matin OU Soir ===== -->
+    <!-- ===== Mode Matin / Soir ===== -->
     <% } else { %>
+
       <h1 class="text-4xl font-bold text-or mb-10 text-center fade-in">
         <%= moment === 'matin' ? 'Carte du Matin ☕' : 'Carte du Soir 🍸' %>
       </h1>
 
-      <% const bloc = (carte && carte[moment]) ? carte[moment] : {}; %>
+      <% const bloc = carte?.[moment] || {}; %>
       <% const entries = Object.entries(bloc); %>
 
-      <% if (!entries.length) { %>
-        <p class="text-center text-gray-500">Aucun produit disponible.</p>
-      <% } %>
-
       <% entries.forEach(([category, items]) => { %>
-        <% if (items && items.length) { %>
-          <section class="mb-12 fade-in">
-            <h2 class="text-2xl font-semibold mb-4 border-b border-gray-700 pb-1 text-or">
-              <%= labelize(category) %>
-            </h2>
+        <% if (!items?.length) return; %>
 
-            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <% items.forEach(item => { %>
-                <li class="flex items-start bg-gray-900/80 p-4 rounded-lg shadow">
-                  <% if (item.image) { %>
-                    <img src="<%= item.image %>" alt="<%= item.name %>"
-                         class="w-20 h-20 object-cover rounded mr-4"
-                         loading="lazy" decoding="async"
-                         onerror="this.src='/assets/img/placeholder.jpg'; this.onerror=null;">
-                  <% } %>
-                  <div>
-                    <p class="text-lg font-medium text-white mb-1">
-                      <%= item.name %>
-                      <% if (item.price !== undefined && item.price !== null && item.price !== '') { %>
-                        <span class="text-sm text-gray-400"> – <%= formatPrice(item.price) %></span>
-                      <% } %>
-                    </p>
-                    <% if (item.description) { %>
-                      <p class="text-sm text-gray-400"><%= item.description %></p>
+        <section class="mb-12 fade-in">
+
+          <h2 class="text-2xl font-semibold mb-4 border-b border-gray-700 pb-1 text-or">
+            <%= labelize(category) %>
+          </h2>
+
+          <ul class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <% items.forEach(item => { %>
+
+              <!-- 👇 toujours la min-width -->
+              <li class="product-tile flex items-start bg-gray-900/80 p-4 rounded-lg shadow">
+                <% if (item.image) { %>
+                  <img src="<%= item.image %>" alt="<%= item.name %>"
+                       class="w-20 h-20 object-cover rounded mr-4"
+                       loading="lazy"
+                       onerror="this.src='/assets/img/placeholder.jpg'; this.onerror=null;">
+                <% } %>
+
+                <div>
+                  <p class="text-lg font-medium text-white mb-1">
+                    <%= item.name %>
+                    <% if (item.price !== null && item.price !== '') { %>
+                      <span class="text-sm text-gray-400"> – <%= formatPrice(item.price) %></span>
                     <% } %>
-                  </div>
-                </li>
-              <% }) %>
-            </ul>
-          </section>
-        <% } %>
+                  </p>
+
+                  <% if (item.description) { %>
+                    <p class="text-sm text-gray-400"><%= item.description %></p>
+                  <% } %>
+                </div>
+              </li>
+
+            <% }) %>
+          </ul>
+
+        </section>
       <% }) %>
 
-      <div class="text-center mt-12 space-y-4 fade-in">
-        <a href="/carte?moment=<%= moment === 'matin' ? 'soir' : 'matin' %>"
-           class="inline-block px-5 py-2 rounded-full border border-or text-or transition
-                  hover:bg-or hover:text-noir">
-          🔁 Voir la carte du <%= moment === 'matin' ? 'soir' : 'matin' %>
-        </a>
-      </div>
     <% } %>
+
   </div>
 </main>

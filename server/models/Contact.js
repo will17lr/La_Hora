@@ -2,32 +2,17 @@
 const mongoose = require('mongoose');
 
 const ContactSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    trim: true,
-    lowercase: true,
-  },
-  phone: {
-    type: String,
-    trim: true,
-    default: '',
-  },
-  subject: {
-    type: String,
-    trim: true,
-    default: '',
-  },
-  message: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-}, { timestamps: true });
+  name: String,
+  email: String,
+  phone: String,
+  subject: String,
+  message: String,
 
+  // 🔥 Pour afficher "Lu / Non lu" dans l'admin
+  read: { type: Boolean, default: false },
+
+  createdAt: { type: Date, default: Date.now }
+});
+
+// ✅ Export du modèle (OBLIGATOIRE)
 module.exports = mongoose.model('Contact', ContactSchema);

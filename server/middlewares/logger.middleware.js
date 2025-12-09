@@ -1,6 +1,6 @@
 // server/middlewares/logger.middleware.js
-// HTTP logger avec x-request-id, skip des assets, masquage de champs sensibles
 
+// HTTP logger avec x-request-id, skip des assets, masquage de champs sensibles
 const { randomUUID } = require('crypto');
 const isProd = process.env.NODE_ENV === 'production';
 

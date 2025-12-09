@@ -89,3 +89,17 @@ html{ background:var(--noir); color:var(--creme); }
   background:linear-gradient(90deg, transparent 0%, rgba(212,175,55,.9) 10%, rgba(212,175,55,1) 50%, rgba(212,175,55,.9) 90%, transparent 100%);
 }
 @media (min-width:768px){ .gold-divider{ height:3px; } }
+
+/* Force la couleur blanche dans la navbar du matin */
+.nav-texte-blanc,
+.nav-texte-blanc a,
+.nav-texte-blanc span {
+  color: #ffffff !important;
+}
+
+/* Hauteur minimale des tuiles produit */
+.product-item {
+  min-width: 290px;
+  width: 100%;
+  display: flex;
+}

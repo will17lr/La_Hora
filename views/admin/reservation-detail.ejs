@@ -1,0 +1,125 @@
+<!--views/admin/reservation-detail.ejs -->
+<%- title = "Détail réservation – La Hora" %>
+
+<section class="px-4 md:px-0">
+  <h1 class="text-3xl font-bold text-[#cbaf7a] mb-6">
+    Détail de la réservation
+  </h1>
+
+  <div class="bg-gray-900 border border-gray-700 rounded-lg p-6 space-y-4 shadow-md">
+
+    <div class="grid md:grid-cols-2 gap-4 text-gray-300">
+
+      <!-- NOM -->
+      <div>
+        <p class="font-semibold text-[#cbaf7a]">Nom</p>
+        <p><%= reservation.lastname %></p>
+      </div>
+
+      <!-- PRENOM -->
+      <div>
+        <p class="font-semibold text-[#cbaf7a]">Prénom</p>
+        <p><%= reservation.firstname %></p>
+      </div>
+
+      <!-- TELEPHONE -->
+      <div>
+        <p class="font-semibold text-[#cbaf7a]">Téléphone</p>
+        <p><%= reservation.phone %></p>
+      </div>
+
+      <!-- EMAIL -->
+      <div>
+        <p class="font-semibold text-[#cbaf7a]">Email</p>
+        <p><%= reservation.email %></p>
+      </div>
+
+      <!-- DATE -->
+      <div>
+        <p class="font-semibold text-[#cbaf7a]">Date</p>
+        <p><%= reservation.date %></p>
+      </div>
+
+      <!-- HEURE -->
+      <div>
+        <p class="font-semibold text-[#cbaf7a]">Heure</p>
+        <p><%= reservation.time %></p>
+      </div>
+
+      <!-- PERSONNES -->
+      <div>
+        <p class="font-semibold text-[#cbaf7a]">Personnes</p>
+        <p><%= reservation.people %></p>
+      </div>
+
+      <!-- STATUT -->
+      <div>
+        <p class="font-semibold text-[#cbaf7a]">Statut</p>
+
+        <% if (reservation.status === "pending") { %>
+          <span class="text-yellow-400">En attente</span>
+
+        <% } else if (reservation.status === "confirmed") { %>
+          <span class="text-green-400">Confirmée</span>
+
+        <% } else if (reservation.status === "cancelled") { %>
+          <span class="text-red-400">Annulée</span>
+
+        <% } else { %>
+          <span class="text-gray-400 italic">Inconnu</span>
+        <% } %>
+      </div>
+
+      <!-- DATE CREATION (SAFE) -->
+      <div>
+        <p class="font-semibold text-[#cbaf7a]">Créée le</p>
+        <p>
+          <%= new Date(reservation.createdAt).toLocaleString("fr-FR") %>
+        </p>
+      </div>
+
+    </div>
+
+    <% if (reservation.message) { %>
+    <div class="pt-4">
+      <p class="font-semibold text-[#cbaf7a]">Message</p>
+      <p class="whitespace-pre-line bg-gray-800 p-3 rounded mt-1">
+        <%= reservation.message %>
+      </p>
+    </div>
+    <% } %>
+
+    <!-- ACTIONS -->
+    <div class="pt-6 flex flex-wrap justify-between gap-3">
+
+      <!-- Retour -->
+      <a href="/admin/reservations" 
+         class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded">
+        ← Retour à la liste
+      </a>
+
+      <div class="flex gap-3">
+
+        <!-- CONFIRMER -->
+        <% if (reservation.status !== "confirmed") { %>
+          <form method="post" action="/admin/reservations/<%= reservation._id %>/confirm">
+            <button class="px-4 py-2 bg-green-600 hover:bg-green-500 text-white rounded">
+              Confirmer
+            </button>
+          </form>
+        <% } %>
+
+        <!-- SUPPRIMER -->
+        <form method="post" 
+              action="/admin/reservations/<%= reservation._id %>/delete"
+              onsubmit="return confirm('Supprimer cette réservation ?')">
+          <button class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded">
+            Supprimer
+          </button>
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+</section>

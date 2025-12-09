@@ -28,7 +28,7 @@ const PORT = process.env.PORT || 4000;
 // Sécurité HTTPS (production)
 // ───────────────────────────────
 if (isProd) {
-  app.set('trust proxy', 1); // important en hébergement cloud
+  app.set('trust proxy', 1);
   app.use((req, res, next) => {
     if (req.secure) return next();
     return res.redirect(`https://${req.headers.host}${req.url}`);
@@ -109,6 +109,14 @@ app.use((req, res, next) => {
   res.locals.adminEmail = req.session?.admin?.email || null;
   next();
 });
+
+// ───────────────────────────────
+// MAILER SERVICE CENTRALISÉ (NOUVEAU)
+// ───────────────────────────────
+const mailerService = require("./server/services/mail.service");
+app.locals.mailerService = mailerService;
+
+console.log("[mail] Service mail chargé");
 
 // ───────────────────────────────
 // Routes

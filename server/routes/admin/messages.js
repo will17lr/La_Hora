@@ -4,12 +4,14 @@ const requireAdmin = require("../../middlewares/requireAdmin");
 const Contact = require("../../models/Contact");
 const mongoose = require("mongoose");
 
-// LISTE DES MESSAGES
+/* ---------------------------------------------------------
+   LISTE DES MESSAGES
+--------------------------------------------------------- */
 router.get("/", requireAdmin, async (req, res, next) => {
   try {
     const messages = await Contact.find()
       .sort({ createdAt: -1 })
-      .lean();
+      .lean(); // lean OK ici, aucune modification
 
     res.render("admin/messages", {
       layout: "partials/layout-admin",
@@ -17,24 +19,38 @@ router.get("/", requireAdmin, async (req, res, next) => {
       messages,
       adminEmail: req.session.admin.email,
     });
+
   } catch (err) {
     console.error("[admin/messages] GET error:", err);
     next(err);
   }
 });
 
-// DÉTAIL D’UN MESSAGE
+/* ---------------------------------------------------------
+   DÉTAIL D’UN MESSAGE
+   + MARQUAGE EN 'LU'
+--------------------------------------------------------- */
 router.get("/:id", requireAdmin, async (req, res, next) => {
   try {
     const { id } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(404).send("ID invalide");
+      req.flash("error", "Identifiant invalide.");
+      return res.redirect("/admin/messages");
     }
 
-    const message = await Contact.findById(id).lean();
+    // ❌ Pas de .lean() pour pouvoir modifier & save()
+    const message = await Contact.findById(id);
+
     if (!message) {
-      return res.status(404).send("Message introuvable");
+      req.flash("error", "Message introuvable.");
+      return res.redirect("/admin/messages");
+    }
+
+    // 🔥 MARQUER COMME LU SI PAS DEJA LU
+    if (!message.read) {
+      message.read = true;
+      await message.save();
     }
 
     res.render("admin/message-detail", {
@@ -43,13 +59,16 @@ router.get("/:id", requireAdmin, async (req, res, next) => {
       message,
       adminEmail: req.session.admin.email,
     });
+
   } catch (err) {
     console.error("[admin/messages] DETAIL error:", err);
     next(err);
   }
 });
 
-// SUPPRESSION
+/* ---------------------------------------------------------
+   SUPPRESSION
+--------------------------------------------------------- */
 router.post("/:id/delete", requireAdmin, async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -61,6 +80,7 @@ router.post("/:id/delete", requireAdmin, async (req, res, next) => {
     }
 
     res.redirect("/admin/messages");
+
   } catch (err) {
     console.error("[admin/messages] DELETE error:", err);
     next(err);

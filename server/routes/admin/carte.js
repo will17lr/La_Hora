@@ -1,89 +1,102 @@
 // server/routes/admin/carte.js
 const router = require("express").Router();
 const requireAdmin = require("../../middlewares/requireAdmin");
-const { getCarte, upsertProduct, deleteProduct } = require("../../services/carte.service");
 
-// LISTE + FORMULAIRE
-router.get("/", requireAdmin, async (req, res, next) => {
-  try {
-    const carte = await getCarte();
+const CarteItem = require("../../models/CarteItem");
+const {
+  getCarteAdmin,
+  getCarteByMoment,
+  saveProduct,
+  deleteProduct
+} = require("../../services/carte.service");
 
-    res.render("admin/carte", {
-      layout: "partials/layout-admin",
-      title: "Gestion de la carte",
-      carte,
-      adminEmail: req.session.admin.email,
-    });
-  } catch (err) {
-    console.error("[admin/carte GET]", err);
-    next(err);
-  }
+// LISTE ADMIN — regroupée par catégories
+router.get("/", requireAdmin, async (req, res) => {
+  const carte = await getCarteAdmin();
+
+  res.render("admin/carte", {
+    layout: "partials/layout-admin",
+    title: "Gestion de la carte",
+    carte,
+    adminEmail: req.session.admin.email,
+  });
 });
 
-// AJOUT
-router.post("/product", requireAdmin, async (req, res, next) => {
-  try {
-    const { moment, categorie, name, description, price, image } = req.body;
-
-    await upsertProduct({
-      moment: moment?.trim(),
-      categorie: categorie?.trim(),
-      product: {
-        name: name?.trim(),
-        description: description?.trim(),
-        price: parseFloat(price) || 0,
-        image: image?.trim(),
-      },
-    });
-
-    res.redirect("/admin/carte");
-  } catch (err) {
-    console.error("[admin/carte ADD]", err);
-    next(err);
-  }
+// PAGE AJOUT
+router.get("/add", requireAdmin, async (req, res) => {
+  res.render("admin/carte-detail", {
+    layout: "partials/layout-admin",
+    title: "Ajouter un produit",
+    product: null,
+    moments: ["matin", "soir"],
+    categories: [
+      "petitdejeuner",
+      "chaudes",
+      "sirops",
+      "softs",
+      "bieres",
+      "cocktails",
+      "alcool",
+      "tapas"
+    ],
+  });
 });
 
-// EDITION
-router.post("/product/:moment/:categorie/:index", requireAdmin, async (req, res, next) => {
-  try {
-    const { moment, categorie, index } = req.params;
-    const { name, description, price, image } = req.body;
+// PAGE EDITION
+router.get("/edit/:id", requireAdmin, async (req, res) => {
+  const product = await CarteItem.findById(req.params.id).lean();
 
-    await upsertProduct({
+  res.render("admin/carte-detail", {
+    layout: "partials/layout-admin",
+    title: "Modifier un produit",
+    product,
+    moments: ["matin", "soir"],
+    categories: [
+      "petitdejeuner",
+      "chaudes",
+      "sirops",
+      "softs",
+      "bieres",
+      "cocktails",
+      "alcool",
+      "tapas"
+    ],
+  });
+});
+
+// SAVE (AJOUT + EDITION)
+router.post("/save", requireAdmin, async (req, res) => {
+  const { id, name, description, price, image, category, moment, order } = req.body;
+
+  if (id) {
+    await CarteItem.findByIdAndUpdate(id, {
+      name,
+      description,
+      price: parseFloat(price),
+      image,
+      category,
       moment,
-      categorie,
-      index: parseInt(index, 10),
-      product: {
-        name: name?.trim(),
-        description: description?.trim(),
-        price: parseFloat(price) || 0,
-        image: image?.trim(),
-      },
+      order: parseInt(order || 0),
     });
-
-    res.redirect("/admin/carte");
-  } catch (err) {
-    console.error("[admin/carte EDIT]", err);
-    next(err);
+  } else {
+    await CarteItem.create({
+      name,
+      description,
+      price: parseFloat(price),
+      image,
+      category,
+      moment,
+      order: parseInt(order || 0),
+    });
   }
+
+  res.redirect("/admin/carte");
 });
 
-// SUPPRESSION
-router.post("/product/:moment/:categorie/:index/delete", requireAdmin, async (req, res, next) => {
-  try {
-    const { moment, categorie, index } = req.params;
-
-    await deleteProduct({
-      moment,
-      categorie,
-      index: parseInt(index, 10),
-    });
-
-    res.redirect("/admin/carte");
-  } catch (err) {
-    console.error("[admin/carte DELETE]", err);
-    next(err);
-  }
+// DELETE
+router.post("/delete/:id", requireAdmin, async (req, res) => {
+  await deleteProduct(req.params.id);
+  res.redirect("/admin/carte");
 });
 
 module.exports = router;

@@ -4,6 +4,12 @@ const router = express.Router();
 const Admin = require("../../models/Admin");
 const bcrypt = require("bcrypt");
 
+function safeAdminRedirect(next) {
+  if (typeof next !== "string" || next.trim() === "") return "/admin";
+  if (!next.startsWith("/") || next.startsWith("//")) return "/admin";
+  return next;
+}
+
 // GET login
 router.get("/login", (req, res) => {
   res.render("admin/login", {
@@ -28,17 +34,7 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    console.log(">>> Email reçu :", email);
-    console.log(">>> Password reçu :", password);
-    console.log(">>> Document admin trouvé :", admin);
-    console.log(">>> Hash stocké :", admin.password);
-
-
     const ok = await bcrypt.compare(password, admin.password);
-
-    console.log(">>> Résultat du bcrypt.compare :", ok);
-    console.log(">>> Password reçu (raw) :", JSON.stringify(password));
-
 
     if (!ok) {
       return res.render("admin/login", {
@@ -54,7 +50,7 @@ router.post("/login", async (req, res) => {
       role: admin.role,
     };
 
-    return res.redirect(next && next !== "" ? next : "/admin");
+    return res.redirect(safeAdminRedirect(next));
 
   } catch (err) {
     console.error("LOGIN ERROR:", err);

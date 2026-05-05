@@ -1,11 +1,6 @@
 // app.js
 require('dotenv').config();
 
-console.log('[ENV CHECK]',
-  'ADMIN_EMAIL=', (process.env.ADMIN_EMAIL || process.env.EMAIL_USER || '(none)'),
-  'HASH_SET=', !!(process.env.ADMIN_PASSWORD_HASH && process.env.ADMIN_PASSWORD_HASH.startsWith('$2'))
-);
-
 const path = require('path');
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
@@ -115,8 +110,6 @@ app.use((req, res, next) => {
 // ───────────────────────────────
 const mailerService = require("./server/services/mail.service");
 app.locals.mailerService = mailerService;
-
-console.log("[mail] Service mail chargé");
 
 // ───────────────────────────────
 // Routes

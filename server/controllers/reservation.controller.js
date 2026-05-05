@@ -73,8 +73,6 @@ function isQuarterStep(hhmm) {
 // POST /reservation
 // ===============================
 async function postReservation(req, res, next) {
-  console.log("DEBUG Reservation =>", Reservation);
-
   try {
     const {
       date, time, people,

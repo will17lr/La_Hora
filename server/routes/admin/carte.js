@@ -14,7 +14,7 @@ const {
 router.get("/", requireAdmin, async (req, res) => {
   const carte = await getCarteAdmin();
 
-  res.render("admin/carte", {
+  res.render("admin/Carte", {
     layout: "partials/layout-admin",
     title: "Gestion de la carte",
     carte,

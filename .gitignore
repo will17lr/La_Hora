@@ -59,16 +59,14 @@ out
 public/assets/css/output.css
 
 # === Data ===
-data/*.json
 ~$*.docx
 
 # === Env ===
 .env
-.env.development.local
-.env.test.local
-.env.production.local
-.env.local
-!.env.example  # on versionne le modèle d'env
+.env.*
+
+# On versionne uniquement le modèle d'environnement
+!.env.example
 
 # === Misc ===
 .docusaurus
@@ -92,8 +90,16 @@ _snapshot-*.txt
 .npm
 .node_repl_history
 
-# === Server data (JSON persistance côté contact/réservation) ===
-server/data/*.json
+# === Server data locales / sensibles ===
+server/data/messages.json
+server/data/reservations.json
+server/data/contacts.json
+
+# Sauvegardes locales JSON
+server/data/*.backup.json
+server/data/*.bak.json
+data/*.backup.json
+data/*.bak.json
 
 # === Logs (où qu'ils soient) ===
 **/logs/

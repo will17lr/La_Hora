@@ -1,0 +1,25 @@
+[build]
+  command = "npm install && npm run build"
+  publish = "public"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = [
+    "express",
+    "ejs",
+    "express-ejs-layouts",
+    "mongoose",
+    "connect-mongo",
+    "express-session"
+  ]
+  included_files = [
+    "views/**",
+    "public/**",
+    "data/**"
+  ]
+
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/server/:splat"
+  status = 200

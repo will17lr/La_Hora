@@ -158,14 +158,33 @@ app.use((err, req, res, next) => {
 });
 
 // Lancement du serveur
-(async () => {
+let dbReady = null;
+
+function ensureDatabase() {
+  if (!dbReady) {
+    dbReady = connectDB(process.env.MONGODB_URI);
+  }
+  return dbReady;
+}
+
+async function startServer() {
   try {
-    await connectDB(process.env.MONGODB_URI);
-    app.listen(PORT, () =>
-      console.log(`Serveur lancé sur http://localhost:${PORT}`)
-    );
+    await ensureDatabase();
+
+    app.listen(PORT, () => {
+      console.log(`Serveur lancé sur le port ${PORT}`);
+    });
   } catch (err) {
     console.error('Erreur connexion MongoDB:', err.message);
     process.exit(1);
   }
-})();
+}
+
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = {
+  app,
+  ensureDatabase,
+};

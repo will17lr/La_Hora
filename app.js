@@ -59,6 +59,8 @@ if (isProd) {
 // ───────────────────────────────
 // Fichiers statiques
 // ───────────────────────────────
+const ROOT_DIR = process.cwd();
+
 app.use(express.static(path.join(__dirname, 'public'), isProd ? {
   maxAge: '7d',
   etag: true,
@@ -68,7 +70,7 @@ app.use(express.static(path.join(__dirname, 'public'), isProd ? {
 // ───────────────────────────────
 // EJS + layouts
 // ───────────────────────────────
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(ROOT_DIR, 'views'));
 app.set('view engine', 'ejs');
 app.use(expressLayouts);
 app.set('layout', 'partials/layout');

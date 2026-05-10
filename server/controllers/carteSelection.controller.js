@@ -1,21 +1,36 @@
 // server/controllers/carteSelection.controller.js
+
+function hourInParis(date = new Date()) {
+  const f = new Intl.DateTimeFormat('fr-FR', {
+    hour: 'numeric',
+    hour12: false,
+    timeZone: 'Europe/Paris'
+  });
+
+  return Number(f.format(date));
+}
+
 function momentFromHour(hour) {
   if (hour >= 6 && hour < 11) return 'matin';
-  if ((hour >= 11 && hour <= 23) || (hour >= 0 && hour < 2)) return 'soir';
   return 'soir';
 }
 
 function renderCarteSelection(req, res) {
   const { moment } = req.query;
+
   const allowed = ['matin', 'soir', 'all'];
+
   if (allowed.includes(moment)) {
     return res.redirect(`/carte?moment=${moment}`);
   }
-  // Si tu as une page visuelle :
-  // return res.render('pages/carte-selection', { title: 'Choisir un moment' });
 
-  // Sinon redirection auto selon l’heure :
-  const m = momentFromHour(new Date().getHours());
+  // Heure française
+  const parisHour = hourInParis();
+
+  console.log('[CARTE SELECTION]', 'Paris hour =', parisHour);
+
+  const m = momentFromHour(parisHour);
+
   return res.redirect(`/carte?moment=${m}`);
 }
 

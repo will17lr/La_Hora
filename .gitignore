@@ -56,7 +56,6 @@ out
 .nuxt
 .vuepress/dist
 .temp
-public/assets/css/output.css
 
 # === Data ===
 ~$*.docx

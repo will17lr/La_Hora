@@ -18,6 +18,9 @@
     "export:menu": "node scripts/export-menu.js",
     "seed:menu": "node scripts/seed-menuitems.js"
   },
+  "engines": {
+    "node": "20.x"
+  },
   "keywords": [
     "bar",
     "cocktails",

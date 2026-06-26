@@ -36,14 +36,23 @@
 <main class="pt-24 pb-16 px-4 sm:px-8 md:px-20">
   <div class="max-w-5xl mx-auto">
 
-    <!-- Onglets -->
-    <nav class="mb-6 mt-2" role="tablist" aria-label="Choix du moment">
-      <div class="hidden md:flex items-center justify-center gap-2">
-        <a href="/carte?moment=matin" class="<%= tabCls(moment==='matin','min-w-[9rem]') %>">☕ Matin</a>
-        <a href="/carte?moment=all"   class="<%= tabCls(isAll,'min-w-[11rem]') %>">📜 Toute la carte</a>
-        <a href="/carte?moment=soir"  class="<%= tabCls(moment==='soir','min-w-[9rem]') %>">🍸 Soir</a>
-      </div>
-    </nav>
+<!-- Onglets -->
+<nav class="mb-6 mt-2 px-4" role="tablist" aria-label="Choix du moment">
+  <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2">
+    <a href="/carte?moment=matin"
+      class="<%= tabCls(moment === 'matin', 'w-full sm:w-auto min-w-[9rem] text-center') %>">
+      ☕ Matin
+    </a>
+
+    <a href="/carte?moment=all" class="<%= tabCls(isAll, 'w-full sm:w-auto min-w-[11rem] text-center') %>">
+      📜 Toute la carte
+    </a>
+
+    <a href="/carte?moment=soir" class="<%= tabCls(moment === 'soir', 'w-full sm:w-auto min-w-[9rem] text-center') %>">
+      🍸 Soir
+    </a>
+  </div>
+</nav>
 
     <!-- ===== Mode ALL ===== -->
     <% if (isAll) { %>
